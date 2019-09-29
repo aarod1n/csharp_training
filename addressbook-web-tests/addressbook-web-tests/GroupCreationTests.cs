@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using NUnit.Framework;
 using OpenQA.Selenium;
-//using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 
@@ -44,25 +43,70 @@ namespace WebAddessbookTests
         [Test]
         public void GroupCreationTest()
         {
-            driver.Navigate().GoToUrl(baseURL);
-            driver.FindElement(By.Name("user")).Click();
-            driver.FindElement(By.Name("user")).Clear();
-            driver.FindElement(By.Name("user")).SendKeys("admin");
-            driver.FindElement(By.Name("pass")).Clear();
-            driver.FindElement(By.Name("pass")).SendKeys("secret");
-            //driver.FindElement(By.XPath("//input[@value='Login']")).Click(); //Не нашел данный элемент
-            driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click(); //Изменил поиск элемента с помощью ЦСС запроса(погуглил)
-            driver.FindElement(By.LinkText("groups")).Click(); //Подходит для поиска ссылок           
-            driver.FindElement(By.Name("new")).Click();
-            driver.FindElement(By.Name("group_name")).SendKeys("test");
-            driver.FindElement(By.Name("group_header")).Clear();
-            driver.FindElement(By.Name("group_header")).SendKeys("test");
-            driver.FindElement(By.Name("group_footer")).Clear();
-            driver.FindElement(By.Name("group_footer")).SendKeys("test");
-            driver.FindElement(By.Name("submit")).Click();
-            driver.FindElement(By.LinkText("groups")).Click();
+            OpenStartPage();
+            AccountData user = new AccountData("admin", "secret");
+            Login(user);
+            GoToGroupPage();
+            InitNewGroupCreation();
+            GroupData group = new GroupData("test2name");
+            group.GroupHeader = "test2header";
+            group.GroupFooter = "test2footer";
+            FillGroupForm(group);
+            CreatedGroup();
+            SubmitGroupCreation();
+            ReturnStartPage();
+        }
+
+        private void ReturnStartPage()
+        {
             driver.FindElement(By.LinkText("Logout")).Click();
         }
+
+        private void SubmitGroupCreation()
+        {
+            driver.FindElement(By.LinkText("groups")).Click();
+        }
+
+        private void CreatedGroup()
+        {
+            driver.FindElement(By.Name("submit")).Click();
+        }
+
+        private void FillGroupForm(GroupData group)
+        {
+            driver.FindElement(By.Name("group_name")).Clear();
+            driver.FindElement(By.Name("group_name")).SendKeys(group.GroupName);
+            driver.FindElement(By.Name("group_header")).Clear();
+            driver.FindElement(By.Name("group_header")).SendKeys(group.GroupHeader);
+            driver.FindElement(By.Name("group_footer")).Clear();
+            driver.FindElement(By.Name("group_footer")).SendKeys(group.GroupFooter);
+        }
+
+        private void InitNewGroupCreation()
+        {
+            driver.FindElement(By.Name("new")).Click();
+        }
+
+        private void GoToGroupPage()
+        {
+            driver.FindElement(By.LinkText("groups")).Click();
+        }
+
+        private void Login(AccountData user)
+        {
+            //driver.FindElement(By.Name("user")).Click();
+            driver.FindElement(By.Name("user")).Clear();
+            driver.FindElement(By.Name("user")).SendKeys(user.UserName);
+            driver.FindElement(By.Name("pass")).Clear();
+            driver.FindElement(By.Name("pass")).SendKeys(user.Password);
+            driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
+        }
+
+        private void OpenStartPage()
+        {
+            driver.Navigate().GoToUrl(baseURL);
+        }
+
         private bool IsElementPresent(By by)
         {
             try
