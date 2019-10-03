@@ -77,6 +77,12 @@ namespace WebAddessbookTests
             driver.FindElement(By.Name("lastname")).SendKeys(entry.LastName);
             driver.FindElement(By.Name("address")).Clear();
             driver.FindElement(By.Name("address")).SendKeys(entry.Address);
+            driver.FindElement(By.Name("middlename")).Clear();
+            driver.FindElement(By.Name("middlename")).SendKeys(entry.MiddleName);
+            driver.FindElement(By.Name("mobile")).Clear();
+            driver.FindElement(By.Name("mobile")).SendKeys(entry.Telephone);
+            driver.FindElement(By.Name("email")).Clear();
+            driver.FindElement(By.Name("email")).SendKeys(entry.E_mail);
 
 
             //Выбор значения из выпадающего списка не равного "none"
