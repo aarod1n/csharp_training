@@ -37,7 +37,7 @@ namespace WebAddessbookTests
             this.first = first;
             this.last = last;
             this.address = address;
-            address = "";
+            middle = "";
             telephone = "";
             e_mail = "";
         }
