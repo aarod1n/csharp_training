@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebAddessbookTests
 {
-    class AccountData
+    public class AccountData
     {
         //Поля класса
         private string name;
@@ -25,6 +25,8 @@ namespace WebAddessbookTests
         }
 
         //Конструкторы класса
+        public AccountData() { }
+
         public AccountData(string name, string password)
         {
             this.name = name;

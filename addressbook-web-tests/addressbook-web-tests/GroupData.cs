@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebAddessbookTests
 {
-    class GroupData
+    public class GroupData
     {
         //Поля класса
         private string name;
@@ -29,8 +29,10 @@ namespace WebAddessbookTests
             get { return footer; }
             set { footer = value; }
         }
-        
+
         //Конструкторы класса
+        public GroupData() { }
+
         public GroupData(string name)
         {
             this.name = name;

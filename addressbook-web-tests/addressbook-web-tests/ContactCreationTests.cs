@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -10,7 +12,7 @@ using OpenQA.Selenium.Support.UI;
 namespace WebAddessbookTests
 {
     [TestFixture]
-    public class GroupCerationTests
+    public class ContactCreationTests
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
@@ -20,7 +22,6 @@ namespace WebAddessbookTests
         [SetUp]
         public void SetupTest()
         {
-            //OpenQA.Selenium.Firefox.FirefoxDriver
             driver = new ChromeDriver();
             baseURL = "http://localhost/addressbook";
             verificationErrors = new StringBuilder();
@@ -41,20 +42,20 @@ namespace WebAddessbookTests
         }
 
         [Test]
-        public void GroupCreationTest()
+        public void ContactCreationTest()
         {
             OpenStartPage();
             AccountData user = new AccountData("admin", "secret");
             Login(user);
-            GoToGroupPage();
-            InitNewGroupCreation();
-            GroupData group = new GroupData("test2name");
-            group.GroupHeader = "test2header";
-            group.GroupFooter = "test2footer";
-            FillGroupForm(group);
-            CreatedGroup();
-            SubmitGroupCreation();
-            ReturnStartPage();
+            GoToAddNewEntry();
+            EntryDate entry = new EntryDate("Ivan", "Ivanov", "Moscow, Pyshkina 3, room 1");
+            entry.MiddleName = "Ivanovich";
+            entry.Telephone = "777777";
+            entry.E_mail = "Ivanov@pochta.com";
+            FillEntryForm(entry);
+            SubmitNewEntry();
+            GoToHome();
+            Thread.Sleep(5000);
         }
 
         //Написанные методы
@@ -63,39 +64,37 @@ namespace WebAddessbookTests
             driver.FindElement(By.LinkText("Logout")).Click();
         }
 
-        private void SubmitGroupCreation()
+        private void GoToHome()
         {
-            driver.FindElement(By.LinkText("groups")).Click();
+            driver.FindElement(By.LinkText("home")).Click();
         }
 
-        private void CreatedGroup()
+        private void FillEntryForm(EntryDate entry)
         {
-            driver.FindElement(By.Name("submit")).Click();
+            driver.FindElement(By.Name("firstname")).Clear();
+            driver.FindElement(By.Name("firstname")).SendKeys(entry.FirstName);
+            driver.FindElement(By.Name("lastname")).Clear();
+            driver.FindElement(By.Name("lastname")).SendKeys(entry.LastName);
+            driver.FindElement(By.Name("address")).Clear();
+            driver.FindElement(By.Name("address")).SendKeys(entry.Address);
+
+
+            //Выбор значения из выпадающего списка не равного "none"
+            List <IWebElement> options = driver.FindElement(By.Name("new_group")).FindElements(By.TagName("option")).ToList();
+            for(int i = 0; i < options.Count; i++)
+            {
+                string element;
+                element = options[i].GetAttribute("value");
+                if (!element.Equals("none")) 
+                    options[i].Click();
+            }            
         }
 
-        private void FillGroupForm(GroupData group)
-        {
-            driver.FindElement(By.Name("group_name")).Clear();
-            driver.FindElement(By.Name("group_name")).SendKeys(group.GroupName);
-            driver.FindElement(By.Name("group_header")).Clear();
-            driver.FindElement(By.Name("group_header")).SendKeys(group.GroupHeader);
-            driver.FindElement(By.Name("group_footer")).Clear();
-            driver.FindElement(By.Name("group_footer")).SendKeys(group.GroupFooter);
-        }
-
-        private void InitNewGroupCreation()
-        {
-            driver.FindElement(By.Name("new")).Click();
-        }
-
-        private void GoToGroupPage()
-        {
-            driver.FindElement(By.LinkText("groups")).Click();
-        }
+        private void GoToAddNewEntry() => driver.FindElement(By.LinkText("add new")).Click();
 
         private void Login(AccountData user)
         {
-            //driver.FindElement(By.Name("user")).Click();
+            driver.FindElement(By.Name("user")).Click();
             driver.FindElement(By.Name("user")).Clear();
             driver.FindElement(By.Name("user")).SendKeys(user.UserName);
             driver.FindElement(By.Name("pass")).Clear();
@@ -106,6 +105,11 @@ namespace WebAddessbookTests
         private void OpenStartPage()
         {
             driver.Navigate().GoToUrl(baseURL);
+        }
+
+        private void SubmitNewEntry()
+        {
+            driver.FindElement(By.Name("submit")).Click();
         }
 
         //Автогенерация
