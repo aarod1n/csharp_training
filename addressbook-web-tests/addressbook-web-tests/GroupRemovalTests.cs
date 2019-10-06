@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace WebAddessbookTests
 {
     [TestFixture]
-    public class GroupCerationTests : TestsBase
+    public class GroupRemovalTests : TestsBase
     {
 
         [Test]
@@ -15,15 +15,10 @@ namespace WebAddessbookTests
             AccountData user = new AccountData("admin", "secret");
             Login(user);
             GoToGroupPage();
-            InitNewGroupCreation();
-            GroupData group = new GroupData("test2name");
-            group.GroupHeader = "test2header";
-            group.GroupFooter = "test2footer";
-            FillGroupForm(group);
-            CreatedGroup();
-            SubmitGroupCreation();
+            SelectGroup(1);
+            DeleteGroup();
             GoToGroupPage();
             Thread.Sleep(5000);
-            }
+        }
     }
 }

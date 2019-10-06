@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WebAddessbookTests
+﻿namespace WebAddessbookTests
 {
-    class EntryDate
+    public class EntryDate
     {
         private string first;
         private string middle;
