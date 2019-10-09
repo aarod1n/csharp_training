@@ -59,14 +59,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountData.cs" />
-    <Compile Include="EntryData.cs" />
-    <Compile Include="GroupData.cs" />
-    <Compile Include="GroupRemovalTests.cs" />
+    <Compile Include="Model\AccountData.cs" />
+    <Compile Include="Appmanager\ApplicationManager.cs" />
+    <Compile Include="Appmanager\BaseHelper.cs" />
+    <Compile Include="Appmanager\ContactHelper.cs" />
+    <Compile Include="Model\EntryData.cs" />
+    <Compile Include="Model\GroupData.cs" />
+    <Compile Include="Appmanager\GroupHelper.cs" />
+    <Compile Include="Tests\GroupRemovalTests.cs" />
+    <Compile Include="Appmanager\LoginHelper.cs" />
+    <Compile Include="Appmanager\NavigationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GroupCreationTests.cs" />
-    <Compile Include="ContactCreationTests.cs" />
-    <Compile Include="TestsBase.cs" />
+    <Compile Include="Tests\GroupCreationTests.cs" />
+    <Compile Include="Tests\ContactCreationTests.cs" />
+    <Compile Include="Tests\TestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

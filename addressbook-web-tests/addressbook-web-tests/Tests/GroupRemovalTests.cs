@@ -11,14 +11,15 @@ namespace WebAddessbookTests
         [Test]
         public void GroupCreationTest()
         {
-            OpenStartPage();
+            AppManager.Navigator.OpenStartPage();
             AccountData user = new AccountData("admin", "secret");
-            Login(user);
-            GoToGroupPage();
-            SelectGroup(1);
-            DeleteGroup();
-            GoToGroupPage();
+            AppManager.Auth.Login(user);
+            AppManager.Group.GoToGroupPage();
+            AppManager.Group.SelectGroup(1);
+            AppManager.Group.DeleteGroup();
+            AppManager.Group.GoToGroupPage();
             Thread.Sleep(5000);
+            AppManager.Auth.logoff();
         }
     }
 }
