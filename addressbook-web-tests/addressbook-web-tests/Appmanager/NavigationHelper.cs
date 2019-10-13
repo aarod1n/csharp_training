@@ -1,5 +1,4 @@
-﻿
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 
 
 namespace WebAddessbookTests
@@ -7,7 +6,7 @@ namespace WebAddessbookTests
     public class NavigationHelper : BaseHelper
     {
         private string baseURL;
-        public NavigationHelper(IWebDriver driver, string baseURL) : base(driver) { this.baseURL = baseURL; }
+        public NavigationHelper(ApplicationManager manager) : base(manager) { baseURL = manager.BaseURL; }
         
         public void OpenStartPage()
         {

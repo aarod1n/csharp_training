@@ -1,28 +1,63 @@
 ﻿using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
 
 namespace WebAddessbookTests
 {
     public class GroupHelper : BaseHelper
     {
-        public GroupHelper(IWebDriver driver) : base(driver) 
+        public GroupHelper(ApplicationManager manager) : base(manager) 
         {
         }
-        /// <summary>
-        /// Методы для тестов групп
-        /// </summary>
-        public void GoToGroupPage()
+        
+        //2 lvl
+        public GroupHelper Created(GroupData group)
+        {
+            GoToGroupPage();
+            InitNewGroupCreation();
+            FillGroupForm(group);
+            SubmitCreatedGroup();
+            GoToGroupPage();
+            return this;
+        }
+
+        public GroupHelper Modify(int v, GroupData newData)
+        {
+            GoToGroupPage();
+            SelectGroup(v);
+            EditGroup();
+            FillGroupForm(newData);
+            UpdateGroup();
+            GoToGroupPage();
+            return this;
+        }
+
+        public GroupHelper RemovaGroup(int g)
+        {
+            GoToGroupPage();
+            SelectGroup(g);
+            DeleteGroup();
+            GoToGroupPage();
+            return this;
+        }
+
+        //1 lvl
+        public GroupHelper GoToGroupPage()
         {
             driver.FindElement(By.LinkText("groups")).Click();
+            return this;
         }
-        public void CreatedGroup()
+        public GroupHelper SubmitCreatedGroup()
         {
             driver.FindElement(By.Name("submit")).Click();
+            return this;
         }
-        public void InitNewGroupCreation()
+        public GroupHelper InitNewGroupCreation()
         {
             driver.FindElement(By.Name("new")).Click();
+            return this;
         }
-        public void FillGroupForm(GroupData group)
+        public GroupHelper FillGroupForm(GroupData group)
         {
             driver.FindElement(By.Name("group_name")).Clear();
             driver.FindElement(By.Name("group_name")).SendKeys(group.GroupName);
@@ -30,21 +65,31 @@ namespace WebAddessbookTests
             driver.FindElement(By.Name("group_header")).SendKeys(group.GroupHeader);
             driver.FindElement(By.Name("group_footer")).Clear();
             driver.FindElement(By.Name("group_footer")).SendKeys(group.GroupFooter);
-        }
-        public void SubmitGroupCreation()
-        {
-            driver.FindElement(By.LinkText("groups")).Click();
+            return this;
         }
 
-        public void SelectGroup(int index)
+        public GroupHelper SelectGroup(int index)
         {
             driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            return this;
         }
 
-        public void DeleteGroup()
+        public GroupHelper DeleteGroup()
         {
             driver.FindElement(By.Name("delete")).Click();
+            return this;
         }
 
+        public GroupHelper EditGroup()
+        {
+            driver.FindElement(By.Name("edit")).Click();
+            return this;
+        }
+
+        public GroupHelper UpdateGroup()
+        {
+            driver.FindElement(By.Name("update")).Click(); 
+            return this;
+        }
     }
 }

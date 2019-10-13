@@ -23,6 +23,8 @@ namespace WebAddessbookTests
         public void SetupTest()
         {
             AppManager = new ApplicationManager();
+            AppManager.Navigator.OpenStartPage();
+            AppManager.Auth.Login(new AccountData("admin", "secret"));
         }
 
         [TearDown]
