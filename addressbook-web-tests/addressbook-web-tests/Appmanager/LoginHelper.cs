@@ -11,11 +11,8 @@ namespace WebAddessbookTests
 
         public void Login(AccountData user)
         {
-            driver.FindElement(By.Name("user")).Click();
-            driver.FindElement(By.Name("user")).Clear();
-            driver.FindElement(By.Name("user")).SendKeys(user.UserName);
-            driver.FindElement(By.Name("pass")).Clear();
-            driver.FindElement(By.Name("pass")).SendKeys(user.Password);
+            Type(By.Name("user"), user.UserName);
+            Type(By.Name("pass"), user.Password);
             driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
         }
 

@@ -9,11 +9,11 @@ namespace WebAddessbookTests
         [Test]
         public void ChangeGroupTest()
         {
-            GroupData newData = new GroupData("newGroupName");
-            newData.GroupHeader = "newGroupHeder";
-            newData.GroupFooter = "newGroupFooter";
+            GroupData newData = new GroupData("newGroupName54545");
+            newData.GroupHeader = "header123123123";
+            newData.GroupFooter = null;
 
-            AppManager.Group.Modify(1, newData);
+            AppManager.Group.Modify(3, newData);
             AppManager.Auth.logoff();
         }
     }

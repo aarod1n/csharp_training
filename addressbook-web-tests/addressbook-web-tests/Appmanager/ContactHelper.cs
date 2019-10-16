@@ -69,27 +69,18 @@ namespace WebAddessbookTests
 
         public ContactHelper FillEntryForm(EntryDate entry)
         {
-            driver.FindElement(By.Name("firstname")).Clear();
-            driver.FindElement(By.Name("firstname")).SendKeys(entry.FirstName);
-            driver.FindElement(By.Name("lastname")).Clear();
-            driver.FindElement(By.Name("lastname")).SendKeys(entry.LastName);
-            driver.FindElement(By.Name("address")).Clear();
-            driver.FindElement(By.Name("address")).SendKeys(entry.Address);
-            driver.FindElement(By.Name("middlename")).Clear();
-            driver.FindElement(By.Name("middlename")).SendKeys(entry.MiddleName);
-            driver.FindElement(By.Name("mobile")).Clear();
-            driver.FindElement(By.Name("mobile")).SendKeys(entry.Telephone);
-            driver.FindElement(By.Name("email")).Clear();
-            driver.FindElement(By.Name("email")).SendKeys(entry.E_mail);
+            Type(By.Name("firstname"), entry.FirstName);
+            Type(By.Name("firstname"), entry.LastName);
+            Type(By.Name("firstname"), entry.Address);
+            Type(By.Name("firstname"), entry.MiddleName);
+            Type(By.Name("firstname"), entry.Telephone);
+            Type(By.Name("firstname"), entry.E_mail);
 
             //Чекнем, есть ли данный выпадающий список на странице. Так как форма создания и форма редактирования разные.
-            IWebElement check = GetExistElement(By.Name("new_group"));
-            if (check != null)
+            if (IsElementPresent(By.Name("new_group")))
             {
                 //Выбор значения из выпадающего списка не равного "none"
                 List<IWebElement> options = driver.FindElement(By.Name("new_group")).FindElements(By.TagName("option")).ToList();
-
-
                 for (int i = 0; i < options.Count; i++)
                 {
                     string element;
@@ -179,7 +170,7 @@ namespace WebAddessbookTests
         {
             //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
             List<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']")).ToList();
-            if (elements.Count >= v & v >= 0)
+            if (v <= elements.Count & v > 0)
                 elements[v].Click();
             else elements[0].Click();
             return this;

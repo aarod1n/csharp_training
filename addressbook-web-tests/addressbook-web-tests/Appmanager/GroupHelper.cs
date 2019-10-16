@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using OpenQA.Selenium;
 
 namespace WebAddessbookTests
 {
@@ -59,18 +59,25 @@ namespace WebAddessbookTests
         }
         public GroupHelper FillGroupForm(GroupData group)
         {
-            driver.FindElement(By.Name("group_name")).Clear();
-            driver.FindElement(By.Name("group_name")).SendKeys(group.GroupName);
-            driver.FindElement(By.Name("group_header")).Clear();
-            driver.FindElement(By.Name("group_header")).SendKeys(group.GroupHeader);
-            driver.FindElement(By.Name("group_footer")).Clear();
-            driver.FindElement(By.Name("group_footer")).SendKeys(group.GroupFooter);
+            //Используем метод, убираем дублирование кода
+            Type(By.Name("group_name"), group.GroupName);
+            Type(By.Name("group_header"), group.GroupHeader);
+            Type(By.Name("group_footer"), group.GroupFooter);
             return this;
         }
 
+        //Выбор из доступных созданных групп
         public GroupHelper SelectGroup(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            if (IsElementPresent(By.CssSelector("input[name='selected[]']"))) //[class='group']
+            {
+                List<IWebElement> elements = driver.FindElements(By.CssSelector("input[name='selected[]']")).ToList();
+                if(index <= elements.Count && index > 0)
+                {
+                    driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+                }
+
+            }
             return this;
         }
 
