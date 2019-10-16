@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using OpenQA.Selenium;
 
@@ -32,12 +31,31 @@ namespace WebAddessbookTests
             return this;
         }
 
-        public ContactHelper RemovalContact(int v)
+        public ContactHelper Removal(int v)
         {
             manager.Navigator.GoToHome();
             SelectContact(1);
             DeleteContact();
             ClosedAlert();
+            manager.Navigator.GoToHome();
+            return this;
+        }
+
+        public ContactHelper Edit(int v, EntryDate entry)
+        {
+            manager.Navigator.GoToHome();
+            SelectContactChange(v);
+            FillEntryForm(entry);
+            SubmitUpdateEntry();
+            manager.Navigator.GoToHome();
+            return this;
+        }
+
+        public ContactHelper Delete(int v)
+        {
+            manager.Navigator.GoToHome();
+            SelectContactChange(v);
+            SubmitDeleteEntry();
             manager.Navigator.GoToHome();
             return this;
         }
@@ -64,23 +82,40 @@ namespace WebAddessbookTests
             driver.FindElement(By.Name("email")).Clear();
             driver.FindElement(By.Name("email")).SendKeys(entry.E_mail);
 
-
-            //Выбор значения из выпадающего списка не равного "none"
-            List<IWebElement> options = driver.FindElement(By.Name("new_group")).FindElements(By.TagName("option")).ToList();
-            for (int i = 0; i < options.Count; i++)
+            //Чекнем, есть ли данный выпадающий список на странице. Так как форма создания и форма редактирования разные.
+            IWebElement check = GetExistElement(By.Name("new_group"));
+            if (check != null)
             {
-                string element;
-                element = options[i].GetAttribute("value");
-                if (!element.Equals("[none]"))
-                    options[i].Click();
-            }
+                //Выбор значения из выпадающего списка не равного "none"
+                List<IWebElement> options = driver.FindElement(By.Name("new_group")).FindElements(By.TagName("option")).ToList();
 
-            return this;
+
+                for (int i = 0; i < options.Count; i++)
+                {
+                    string element;
+                    element = options[i].GetAttribute("value");
+                    if (!element.Equals("[none]"))
+                        options[i].Click();
+                }
+            }
+                return this;
         }
 
         public ContactHelper SubmitNewEntry()
         {
             driver.FindElement(By.Name("submit")).Click();
+            return this;
+        }
+
+        public ContactHelper SubmitUpdateEntry()
+        {
+            driver.FindElement(By.CssSelector("[value='Update']")).Click();
+            return this;
+        }
+
+        public ContactHelper SubmitDeleteEntry()
+        {
+            driver.FindElement(By.CssSelector("[value='Delete']")).Click();
             return this;
         }
 
@@ -139,5 +174,15 @@ namespace WebAddessbookTests
             driver.FindElement(By.Name("add")).Click();
             return this;
         }
+
+        public ContactHelper SelectContactChange(int v)
+        {
+            //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
+            List<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']")).ToList();
+            if (elements.Count >= v)
+                elements[v].Click();
+            return this;
+        }
+
     }
 }
