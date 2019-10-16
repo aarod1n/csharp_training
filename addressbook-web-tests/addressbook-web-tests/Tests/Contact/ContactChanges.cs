@@ -16,12 +16,12 @@ namespace WebAddessbookTests
         [Test]
         public void ContactChangeEntryData()
         {
-            EntryDate entry = new EntryDate("Petrov", "Petr", "Moscow, Lenina 10, room 345");
+            EntryDate entry = new EntryDate("Petrov1", "Petr1", "Moscow, Lenina 101, room 3451");
             entry.MiddleName = "Petrovich";
             entry.Telephone = "123456789";
             entry.E_mail = "PPetrov@pochta.by";
 
-            AppManager.Contact.Edit(1, entry);
+            AppManager.Contact.Edit(-1, entry);
             AppManager.Auth.logoff();
         }
     }

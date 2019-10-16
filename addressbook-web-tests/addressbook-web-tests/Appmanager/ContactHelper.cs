@@ -179,8 +179,9 @@ namespace WebAddessbookTests
         {
             //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
             List<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']")).ToList();
-            if (elements.Count >= v)
+            if (elements.Count >= v & v >= 0)
                 elements[v].Click();
+            else elements[0].Click();
             return this;
         }
 
