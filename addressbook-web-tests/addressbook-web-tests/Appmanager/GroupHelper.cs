@@ -13,6 +13,7 @@ namespace WebAddessbookTests
         //2 lvl
         public GroupHelper Created(GroupData group)
         {
+            manager.Navigator.OpenStartPage();
             GoToGroupPage();
             InitNewGroupCreation();
             FillGroupForm(group);
@@ -23,6 +24,7 @@ namespace WebAddessbookTests
 
         public GroupHelper Modify(int v, GroupData newData)
         {
+            manager.Navigator.OpenStartPage();
             GoToGroupPage();
             SelectGroup(v);
             EditGroup();
@@ -34,6 +36,7 @@ namespace WebAddessbookTests
 
         public GroupHelper RemovaGroup(int g)
         {
+            manager.Navigator.OpenStartPage();
             GoToGroupPage();
             SelectGroup(g);
             DeleteGroup();

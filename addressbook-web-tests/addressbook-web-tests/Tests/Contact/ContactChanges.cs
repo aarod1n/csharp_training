@@ -9,8 +9,7 @@ namespace WebAddessbookTests
         [Test]
         public void ContactChangeGroup()
         {
-            AppManager.Contact.ChangeGroup(1);
-            AppManager.Auth.logoff();
+            AppManager.Contact.ChangeGroup(1);           
         }
     
         [Test]
@@ -21,8 +20,7 @@ namespace WebAddessbookTests
             entry.Telephone = "123456789";
             entry.E_mail = "PPetrov@pochta.by";
 
-            AppManager.Contact.Edit(-1, entry);
-            AppManager.Auth.logoff();
+            AppManager.Contact.Edit(-1, entry);            
         }
     }
 }

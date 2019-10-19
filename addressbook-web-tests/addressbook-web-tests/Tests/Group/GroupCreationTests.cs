@@ -15,7 +15,6 @@ namespace WebAddessbookTests
             group.GroupFooter = "test2footer";
 
             AppManager.Group.Created(group);
-            AppManager.Auth.logoff();
             }
     }
 }

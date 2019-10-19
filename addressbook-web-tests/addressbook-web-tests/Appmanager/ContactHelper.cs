@@ -14,6 +14,7 @@ namespace WebAddessbookTests
         //2 lvl 
         public ContactHelper Create(EntryDate entry)
         {
+            manager.Navigator.OpenStartPage();
             GoToAddNewEntry();
             FillEntryForm(entry);
             SubmitNewEntry();
@@ -23,6 +24,7 @@ namespace WebAddessbookTests
 
         public ContactHelper ChangeGroup(int v)
         {
+            manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
             SelectContact(v);
             SelectGroupAddTo();
@@ -33,6 +35,7 @@ namespace WebAddessbookTests
 
         public ContactHelper Removal(int v)
         {
+            manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
             SelectContact(1);
             DeleteContact();
@@ -43,6 +46,7 @@ namespace WebAddessbookTests
 
         public ContactHelper Edit(int v, EntryDate entry)
         {
+            manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
             SelectContactChange(v);
             FillEntryForm(entry);
@@ -53,6 +57,7 @@ namespace WebAddessbookTests
 
         public ContactHelper Delete(int v)
         {
+            manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
             SelectContactChange(v);
             SubmitDeleteEntry();
@@ -70,11 +75,11 @@ namespace WebAddessbookTests
         public ContactHelper FillEntryForm(EntryDate entry)
         {
             Type(By.Name("firstname"), entry.FirstName);
-            Type(By.Name("firstname"), entry.LastName);
-            Type(By.Name("firstname"), entry.Address);
-            Type(By.Name("firstname"), entry.MiddleName);
-            Type(By.Name("firstname"), entry.Telephone);
-            Type(By.Name("firstname"), entry.E_mail);
+            Type(By.Name("lastname"), entry.LastName);
+            Type(By.Name("address"), entry.Address);
+            Type(By.Name("middlename"), entry.MiddleName);
+            Type(By.Name("mobile"), entry.Telephone);
+            Type(By.Name("email"), entry.E_mail);
 
             //Чекнем, есть ли данный выпадающий список на странице. Так как форма создания и форма редактирования разные.
             if (IsElementPresent(By.Name("new_group")))

@@ -15,8 +15,7 @@ namespace WebAddessbookTests
             entry.Telephone = "777777";
             entry.E_mail = "Ivanov@pochta.com";
 
-            AppManager.Contact.Create(entry);
-            AppManager.Auth.logoff();
+            AppManager.Contact.Create(entry);            
         }
     }
 }

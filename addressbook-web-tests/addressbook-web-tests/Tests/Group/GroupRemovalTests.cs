@@ -13,7 +13,6 @@ namespace WebAddessbookTests
         {
             AppManager.Navigator.OpenStartPage();
             AppManager.Group.RemovaGroup(1);
-            AppManager.Auth.logoff();
         }
     }
 }

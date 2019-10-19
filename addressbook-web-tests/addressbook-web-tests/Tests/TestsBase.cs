@@ -22,15 +22,8 @@ namespace WebAddessbookTests
         [SetUp]
         public void SetupTest()
         {
-            AppManager = new ApplicationManager();
-            AppManager.Navigator.OpenStartPage();
-            AppManager.Auth.Login(new AccountData("admin", "secret"));
+            AppManager = TestSuiteFixture.appManager;
         }
 
-        [TearDown]
-        public void TeardownTest()
-        {
-            AppManager.Quit();
-        }
     }
 }

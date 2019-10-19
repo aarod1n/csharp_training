@@ -10,16 +10,14 @@ namespace WebAddessbookTests
         [Test]
         public void ContactRemovalTestFromHome()
         {
-            AppManager.Contact.Removal(1); 
-            AppManager.Auth.logoff();
+            AppManager.Contact.Removal(1);           
         }
 
         //Удаление через форму редактирования
         [Test]
         public void ContactRemovalTestFromEditForm()
         {
-            AppManager.Contact.Delete(1);
-            AppManager.Auth.logoff();
+            AppManager.Contact.Delete(1);            
         }
     }
 }

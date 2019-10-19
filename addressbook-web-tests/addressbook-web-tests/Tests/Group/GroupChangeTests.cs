@@ -14,7 +14,6 @@ namespace WebAddessbookTests
             newData.GroupFooter = null;
 
             AppManager.Group.Modify(3, newData);
-            AppManager.Auth.logoff();
         }
     }
 }
