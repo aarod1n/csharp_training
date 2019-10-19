@@ -22,7 +22,7 @@ namespace WebAddessbookTests
         [SetUp]
         public void SetupTest()
         {
-            AppManager = TestSuiteFixture.appManager;
+            AppManager = ApplicationManager.GetInstance();
         }
 
     }

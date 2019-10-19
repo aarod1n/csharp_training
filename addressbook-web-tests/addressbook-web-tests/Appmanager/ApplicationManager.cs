@@ -1,11 +1,15 @@
 ﻿using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Threading;
 
 namespace WebAddessbookTests
 {
     public class ApplicationManager
     {
+        //Для передачи нового объекта разным потокам
+        private static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
+
         private string baseURL;
         private IWebDriver driver;
 
@@ -25,8 +29,18 @@ namespace WebAddessbookTests
             get { return baseURL; }
         }
 
-        public ApplicationManager()
+        //Возвращаем объект менеджера для потока, если в данном потоке его нет. Для каждого потока свой.
+        public static ApplicationManager GetInstance()
         {
+            if(!app.IsValueCreated)
+            {
+                app.Value = new ApplicationManager();
+            }
+            return app.Value;
+        }
+
+        private ApplicationManager()
+        {            
             driver = new ChromeDriver();
             baseURL = "http://localhost/addressbook";
 
@@ -36,17 +50,9 @@ namespace WebAddessbookTests
             groupHelper = new GroupHelper(this);
             contactHelper = new ContactHelper(this);
         }
-    
-        /// <summary>
-        /// Свойства для получения значения приватных полей в тестах для вызова методов.
-        /// </summary>
-        public LoginHelper Auth { get { return loginHelper; } }
-        public NavigationHelper Navigator { get { return navigationHelper; } }
-        public GroupHelper Group { get { return groupHelper; } }
-        public ContactHelper Contact { get { return contactHelper; } }
-        
-    
-        public void Quit()
+
+        //В деструкторе закрываем браузер для каждого объекта, в разных потоках.
+        ~ApplicationManager() 
         {
             try
             {
@@ -57,5 +63,13 @@ namespace WebAddessbookTests
                 // Ignore errors if unable to close the browser
             }
         }
+
+        /// <summary>
+        /// Свойства для получения значения приватных полей в тестах для вызова методов.
+        /// </summary>
+        public LoginHelper Auth { get { return loginHelper; } }
+        public NavigationHelper Navigator { get { return navigationHelper; } }
+        public GroupHelper Group { get { return groupHelper; } }
+        public ContactHelper Contact { get { return contactHelper; } }
     }
 }
