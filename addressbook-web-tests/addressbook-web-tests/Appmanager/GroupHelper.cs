@@ -44,12 +44,12 @@ namespace WebAddessbookTests
             return this;
         }
 
-        //Проверка
+        //Проверка наличие групп
         public GroupHelper CheckPresenceGroup(GroupData group)
         {
             manager.Navigator.OpenStartPage();
             GoToGroupPage();
-            if (!(IsElementPresent(By.LinkText("groups"))))
+            if (!(IsElementPresent(By.CssSelector("input[name='selected[]']"))))
             {
                 manager.Group.Created(group);
             }
