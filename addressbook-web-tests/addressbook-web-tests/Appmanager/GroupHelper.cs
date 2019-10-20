@@ -44,6 +44,18 @@ namespace WebAddessbookTests
             return this;
         }
 
+        //Проверка
+        public GroupHelper CheckPresenceGroup(GroupData group)
+        {
+            manager.Navigator.OpenStartPage();
+            GoToGroupPage();
+            if (!(IsElementPresent(By.LinkText("groups"))))
+            {
+                manager.Group.Created(group);
+            }
+            return this;
+        }
+
         //1 lvl
         public GroupHelper GoToGroupPage()
         {

@@ -4,16 +4,21 @@ using NUnit.Framework;
 namespace WebAddessbookTests
 {
     [TestFixture]
-    public class GroupChangeTests : TestsBase
+    public class GroupChangeTests : AuhtTestsBase
     {
         [Test]
         public void ChangeGroupTest()
         {
-            GroupData newData = new GroupData("newGroupName54545");
-            newData.GroupHeader = "header123123123";
-            newData.GroupFooter = null;
+            GroupData group = new GroupData("test123name");
+            group.GroupHeader = "test123header";
+            group.GroupFooter = "test123footer";            
 
-            AppManager.Group.Modify(3, newData);
+            GroupData newGroup = new GroupData("NewGroupname");
+            newGroup.GroupHeader = "NewGroupheader";
+            newGroup.GroupFooter = "NewGroupfooter";
+
+            AppManager.Group.CheckPresenceGroup(group);
+            AppManager.Group.Modify(1, newGroup);
         }
     }
 }

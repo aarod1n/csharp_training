@@ -20,9 +20,9 @@ namespace WebAddessbookTests
         protected ApplicationManager AppManager;
 
         [SetUp]
-        public void SetupTest()
+        public void SetupApplicationManager()
         {
-            AppManager = ApplicationManager.GetInstance();
+            AppManager = ApplicationManager.GetInstance();            
         }
 
     }

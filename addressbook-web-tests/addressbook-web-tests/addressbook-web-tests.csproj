@@ -66,6 +66,7 @@
     <Compile Include="Model\EntryData.cs" />
     <Compile Include="Model\GroupData.cs" />
     <Compile Include="Appmanager\GroupHelper.cs" />
+    <Compile Include="Tests\AuhtTestsBase.cs" />
     <Compile Include="Tests\Contact\ContactChanges.cs" />
     <Compile Include="Tests\Contact\ContactRemovalTests.cs" />
     <Compile Include="Tests\Group\GroupChangeTests.cs" />
@@ -75,8 +76,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Group\GroupCreationTests.cs" />
     <Compile Include="Tests\Contact\ContactCreationTests.cs" />
+    <Compile Include="Tests\Login\LoginTests.cs" />
     <Compile Include="Tests\TestsBase.cs" />
-    <Compile Include="Tests\TestSuiteFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

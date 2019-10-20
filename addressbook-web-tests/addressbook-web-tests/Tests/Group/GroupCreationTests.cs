@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace WebAddessbookTests
 {
     [TestFixture]
-    public class GroupCerationTests : TestsBase
+    public class GroupCerationTests : AuhtTestsBase
     {
 
         [Test]
@@ -15,6 +15,6 @@ namespace WebAddessbookTests
             group.GroupFooter = "test2footer";
 
             AppManager.Group.Created(group);
-            }
+        }
     }
 }

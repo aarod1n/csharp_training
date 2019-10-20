@@ -65,6 +65,17 @@ namespace WebAddessbookTests
             return this;
         }
 
+        //Проверка наличия контакта
+        public ContactHelper CheckPresenceContact(EntryDate entry)
+        {
+            manager.Navigator.GoToHome();
+            if (!(IsElementPresent(By.CssSelector("a[href^='edit.php?']"))))
+            {
+                manager.Contact.Create(entry);
+            }
+            return this;
+        }
+
         //1 lvl 
         public ContactHelper GoToAddNewEntry() 
         { 
@@ -92,6 +103,7 @@ namespace WebAddessbookTests
                     element = options[i].GetAttribute("value");
                     if (!element.Equals("[none]"))
                         options[i].Click();
+                    else options[0].Click();
                 }
             }
                 return this;
@@ -173,13 +185,14 @@ namespace WebAddessbookTests
 
         public ContactHelper SelectContactChange(int v)
         {
-            //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
-            List<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']")).ToList();
-            if (v <= elements.Count & v > 0)
-                elements[v].Click();
-            else elements[0].Click();
+            if (IsElementPresent(By.CssSelector("a[href^='edit.php?']")))
+            {
+                //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
+                List<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']")).ToList();
+                if (v <= elements.Count && v > 0)
+                    elements[v-1].Click();                                
+            }
             return this;
         }
-
     }
 }
