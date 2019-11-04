@@ -7,6 +7,9 @@ namespace WebAddessbookTests
 {
     public class GroupHelper : BaseHelper
     {
+        //Приватный кеш
+        private List<GroupData> groupCash = null;
+
         public GroupHelper(ApplicationManager manager) : base(manager) 
         {
         }
@@ -57,18 +60,21 @@ namespace WebAddessbookTests
             return this;
         }
 
-        //Получение всех созданных групп
+        //Получение всех созданных групп, метод реализован с помощью кеширования
         public List<GroupData> GetGroupList()
         {
-            List<GroupData> groups = new List<GroupData>();
-            manager.Navigator.OpenStartPage();
-            GoToGroupPage();
-            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
-            foreach(IWebElement e in elements)
+            if (groupCash == null)
             {
-                groups.Add(new GroupData(e.Text));//Создаем объекты типа GroupData, кладем в список 
+                groupCash = new List<GroupData>();
+                manager.Navigator.OpenStartPage();
+                GoToGroupPage();
+                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+                foreach (IWebElement e in elements)
+                {
+                    groupCash.Add(new GroupData(e.Text));//Создаем объекты типа GroupData, кладем в список 
+                }                
             }
-            return groups;
+            return new List<GroupData>(groupCash);
         }
 
         //Сравниваем кол-во элементов в списках
@@ -108,6 +114,7 @@ namespace WebAddessbookTests
         public GroupHelper SubmitCreatedGroup()
         {
             driver.FindElement(By.Name("submit")).Click();
+            groupCash = null;
             return this;
         }
         public GroupHelper InitNewGroupCreation()
@@ -142,18 +149,21 @@ namespace WebAddessbookTests
         public GroupHelper DeleteGroup()
         {
             driver.FindElement(By.Name("delete")).Click();
+            groupCash = null;
             return this;
         }
 
         public GroupHelper EditGroup()
         {
             driver.FindElement(By.Name("edit")).Click();
+            groupCash = null;
             return this;
         }
 
         public GroupHelper UpdateGroup()
         {
-            driver.FindElement(By.Name("update")).Click(); 
+            driver.FindElement(By.Name("update")).Click();
+            groupCash = null;
             return this;
         }
     }

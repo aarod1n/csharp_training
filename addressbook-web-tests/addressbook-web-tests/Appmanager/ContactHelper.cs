@@ -8,6 +8,8 @@ namespace WebAddessbookTests
 {
     public class ContactHelper : BaseHelper
     {
+        private List<EntryDate> contactCash = null;
+
         public ContactHelper(ApplicationManager manager) : base(manager)
         {
         }
@@ -79,26 +81,29 @@ namespace WebAddessbookTests
 
         public List<EntryDate> GetContactList()
         {
-            List<EntryDate> contacts = new List<EntryDate>();
-            manager.Navigator.GoToHome();
-
-            //Получаем кол-во строк с контактами
-            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
-            
-            //Берем строку и парсим ее на ячейки, берем нужное значение ячейки.
-            foreach(IWebElement row in elements)
+            if (contactCash == null)
             {
-                ICollection<IWebElement> cell = row.FindElements(By.TagName("td"));
-                string[] text = new string[cell.Count];
-                int count = 0;
-                foreach(IWebElement c in cell)
+                contactCash = new List<EntryDate>();
+                manager.Navigator.GoToHome();
+
+                //Получаем кол-во строк с контактами
+                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+
+                //Берем строку и парсим ее на ячейки, берем нужное значение ячейки.
+                foreach (IWebElement row in elements)
                 {
-                    text[count] = c.Text;
-                    count++;
+                    ICollection<IWebElement> cell = row.FindElements(By.TagName("td"));
+                    string[] text = new string[cell.Count];
+                    int count = 0;
+                    foreach (IWebElement c in cell)
+                    {
+                        text[count] = c.Text;
+                        count++;
+                    }
+                    contactCash.Add(new EntryDate(text[2], text[1]));
                 }
-                contacts.Add(new EntryDate(text[2], text[1]));
             }
-            return contacts;
+            return new List<EntryDate>(contactCash);
         }
 
         //Проверка по кло-ву элементов в списке
@@ -116,6 +121,7 @@ namespace WebAddessbookTests
         }
         public void CheckContactChangeResultByObj(List<EntryDate> oldContactsList, List<EntryDate> newContactsList, EntryDate entry, int index)
         {
+            oldContactsList.Sort();
             oldContactsList[index].FirstName = entry.FirstName;
             oldContactsList[index].LastName = entry.LastName;
             oldContactsList.Sort();
@@ -159,18 +165,21 @@ namespace WebAddessbookTests
         public ContactHelper SubmitNewEntry()
         {
             driver.FindElement(By.Name("submit")).Click();
+            contactCash = null;
             return this;
         }
 
         public ContactHelper SubmitUpdateEntry()
         {
             driver.FindElement(By.CssSelector("[value='Update']")).Click();
+            contactCash = null;
             return this;
         }
 
         public ContactHelper SubmitDeleteEntry()
         {
             driver.FindElement(By.CssSelector("[value='Delete']")).Click();
+            contactCash = null;
             return this;
         }
 
@@ -183,9 +192,11 @@ namespace WebAddessbookTests
         public ContactHelper DeleteContact()
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
+            contactCash = null;
             return this;
         }
 
+        //Подтверждение закрытия окна предупреждения
         public ContactHelper ClosedAlert()
         {
             driver.SwitchTo().Alert().Accept();

@@ -28,8 +28,7 @@ namespace WebAddessbookTests
             
             for (int i = 0; i < count; i++)
             {
-                oldContactsList.Add(new EntryDate("Ivan" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1"));
-                
+                oldContactsList.Add(new EntryDate("Ivan" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1"));                
             }            
             AppManager.Contact.CheckContactResultByObj(oldContactsList, NewContactsList);
         }
