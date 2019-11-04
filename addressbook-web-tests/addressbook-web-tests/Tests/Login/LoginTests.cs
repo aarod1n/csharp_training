@@ -9,7 +9,7 @@ namespace WebAddessbookTests
         [Test]
         public void LoginByValidUser()
         {
-            AppManager.Auth.logoff();
+            AppManager.Auth.Logoff();
             AccountData account = new AccountData("admin", "secret");
             AppManager.Auth.Login(account);
             Assert.IsTrue(AppManager.Auth.IsLoggetIn());
@@ -18,7 +18,7 @@ namespace WebAddessbookTests
         [Test]
         public void LoginByNotValid()
         {
-            AppManager.Auth.logoff();
+            AppManager.Auth.Logoff();
             AccountData account = new AccountData("user", "secret");
             AppManager.Auth.Login(account);
             Assert.IsFalse(AppManager.Auth.IsLoggetIn());

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace WebAddessbookTests
 {
@@ -18,7 +19,12 @@ namespace WebAddessbookTests
             newGroup.GroupFooter = "NewGroupfooter";
 
             AppManager.Group.CheckPresenceGroup(group);
-            AppManager.Group.Modify(1, newGroup);
+            List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
+            
+            AppManager.Group.Modify(0, newGroup);
+            List<GroupData> newGroupList = AppManager.Group.GetGroupList();
+
+            AppManager.Group.CheckChangeGroupResultByObj(0, newGroup, oldGroupList, newGroupList);
         }
     }
 }

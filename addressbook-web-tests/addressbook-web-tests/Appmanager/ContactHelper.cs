@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using OpenQA.Selenium;
 
 
@@ -37,7 +38,7 @@ namespace WebAddessbookTests
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContact(1);
+            SelectContact(v+1);
             DeleteContact();
             ClosedAlert();
             manager.Navigator.GoToHome();
@@ -48,7 +49,7 @@ namespace WebAddessbookTests
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContactChange(v);
+            SelectContactChange(v+1);
             FillEntryForm(entry);
             SubmitUpdateEntry();
             manager.Navigator.GoToHome();
@@ -59,7 +60,7 @@ namespace WebAddessbookTests
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContactChange(v);
+            SelectContactChange(v+1);
             SubmitDeleteEntry();
             manager.Navigator.GoToHome();
             return this;
@@ -74,6 +75,52 @@ namespace WebAddessbookTests
                 manager.Contact.Create(entry);
             }
             return this;
+        }
+
+        public List<EntryDate> GetContactList()
+        {
+            List<EntryDate> contacts = new List<EntryDate>();
+            manager.Navigator.GoToHome();
+
+            //Получаем кол-во строк с контактами
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name=entry]"));
+            
+            //Берем строку и парсим ее на ячейки, берем нужное значение ячейки.
+            foreach(IWebElement row in elements)
+            {
+                ICollection<IWebElement> cell = row.FindElements(By.TagName("td"));
+                string[] text = new string[cell.Count];
+                int count = 0;
+                foreach(IWebElement c in cell)
+                {
+                    text[count] = c.Text;
+                    count++;
+                }
+                contacts.Add(new EntryDate(text[2], text[1]));
+            }
+            return contacts;
+        }
+
+        //Проверка по кло-ву элементов в списке
+        public void CheckContactResultByCount(List<EntryDate> oldContactsList, List<EntryDate> newContactsList)
+        {
+            Assert.AreEqual(oldContactsList.Count, newContactsList.Count);
+        }
+
+        //Проверка элементов путем сравнения самих объектов
+        public void CheckContactResultByObj(List<EntryDate> oldContactsList, List<EntryDate> newContactsList)
+        {
+            oldContactsList.Sort();
+            newContactsList.Sort();
+            Assert.AreEqual(oldContactsList, newContactsList);
+        }
+        public void CheckContactChangeResultByObj(List<EntryDate> oldContactsList, List<EntryDate> newContactsList, EntryDate entry, int index)
+        {
+            oldContactsList[index].FirstName = entry.FirstName;
+            oldContactsList[index].LastName = entry.LastName;
+            oldContactsList.Sort();
+            newContactsList.Sort();
+            Assert.AreEqual(oldContactsList, newContactsList);
         }
 
         //1 lvl 

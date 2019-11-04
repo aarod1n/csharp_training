@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace WebAddessbookTests
@@ -26,7 +27,7 @@ namespace WebAddessbookTests
         {
             manager.Navigator.OpenStartPage();
             GoToGroupPage();
-            SelectGroup(v);
+            SelectGroup(v+1);
             EditGroup();
             FillGroupForm(newData);
             UpdateGroup();
@@ -38,7 +39,7 @@ namespace WebAddessbookTests
         {
             manager.Navigator.OpenStartPage();
             GoToGroupPage();
-            SelectGroup(g);
+            SelectGroup(g+1);
             DeleteGroup();
             GoToGroupPage();
             return this;
@@ -55,6 +56,48 @@ namespace WebAddessbookTests
             }
             return this;
         }
+
+        //Получение всех созданных групп
+        public List<GroupData> GetGroupList()
+        {
+            List<GroupData> groups = new List<GroupData>();
+            manager.Navigator.OpenStartPage();
+            GoToGroupPage();
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+            foreach(IWebElement e in elements)
+            {
+                groups.Add(new GroupData(e.Text));//Создаем объекты типа GroupData, кладем в список 
+            }
+            return groups;
+        }
+
+        //Сравниваем кол-во элементов в списках
+        public void CheckGroupCreationResultByCount(List<GroupData> oldGroupList, List<GroupData> newGroupList)
+        {
+            Assert.AreEqual(oldGroupList.Count + 1, newGroupList.Count); //Для нашей реализации нужна логика Assert из dll NUnit.Framework
+        }
+
+        public void CheckGroupRemovalResultByCount(List<GroupData> oldGroupList, List<GroupData> newGroupList)
+        {
+            Assert.AreEqual(oldGroupList.Count - 1, newGroupList.Count); //Для нашей реализации нужна логика Assert из dll NUnit.Framework
+        }
+
+        //Сравниваем два объекта типа GroupData
+        public void CheckGroupResultByObj(List<GroupData> oldGroupList, List<GroupData> newGroupList)
+        {
+            oldGroupList.Sort();
+            newGroupList.Sort();
+            Assert.AreEqual(oldGroupList, newGroupList);
+        }
+
+        public void CheckChangeGroupResultByObj(int index, GroupData group, List<GroupData> oldGroupList, List<GroupData> newGroupList)
+        {
+            oldGroupList.Sort();
+            oldGroupList[index].GroupName = group.GroupName;
+            newGroupList.Sort();
+            Assert.AreEqual(oldGroupList, newGroupList);
+        }
+
 
         //1 lvl
         public GroupHelper GoToGroupPage()

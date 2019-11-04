@@ -18,7 +18,7 @@ namespace WebAddessbookTests
                     return;
                 }
 
-                logoff();
+                Logoff();
             }
             Type(By.Name("user"), user.UserName);
             Type(By.Name("pass"), user.Password);
@@ -36,7 +36,7 @@ namespace WebAddessbookTests
         }
 
         //Метод для logoff'a
-        public void logoff()
+        public void Logoff()
         {
             if (IsLoggetIn())
             {

@@ -1,10 +1,11 @@
 ﻿using System.Threading;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace WebAddessbookTests
 {
     [TestFixture]
-    public class ContactChanges : AuhtTestsBase
+    public class ContactChangesTests : AuhtTestsBase
     {
         [Test]
         public void ContactChangeGroup()
@@ -15,7 +16,7 @@ namespace WebAddessbookTests
             newEntry.E_mail = "Ivanov123@pochta.com";
 
             AppManager.Contact.CheckPresenceContact(newEntry);
-            AppManager.Contact.ChangeGroup(1);           
+            AppManager.Contact.ChangeGroup(1);
         }
     
         [Test]
@@ -27,13 +28,17 @@ namespace WebAddessbookTests
             newEntry.E_mail = "Ivanov123@pochta.com";
 
             AppManager.Contact.CheckPresenceContact(newEntry);
+            List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
 
-            EntryDate entry = new EntryDate("Petrov1", "Petr1", "Moscow, Lenina 101, room 3451");
+            EntryDate entry = new EntryDate("Petr1", "Petrov1", "Moscow, Lenina 101, room 3451");
             entry.MiddleName = "Petrovich";
             entry.Telephone = "123456789";
             entry.E_mail = "PPetrov@pochta.by";
 
-            AppManager.Contact.Edit(1, entry);            
+            AppManager.Contact.Edit(0, entry);
+            List<EntryDate> newContactList = AppManager.Contact.GetContactList();
+
+            AppManager.Contact.CheckContactChangeResultByObj(oldContactList, newContactList, entry, 0);
         }
     }
 }

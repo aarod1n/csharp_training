@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace WebAddessbookTests
 {
@@ -14,9 +15,14 @@ namespace WebAddessbookTests
             newEntry.MiddleName = "Ivanovich123";
             newEntry.Telephone = "777777";
             newEntry.E_mail = "Ivanov123@pochta.com";
-            
+
             AppManager.Contact.CheckPresenceContact(newEntry);
-            AppManager.Contact.Removal(1);           
+            List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
+            AppManager.Contact.Removal(1);
+            List<EntryDate> newContactList = AppManager.Contact.GetContactList();
+            oldContactList.RemoveAt(1);
+            
+            AppManager.Contact.CheckContactResultByObj(oldContactList, newContactList);
         }
 
         //Удаление через форму редактирования
@@ -29,7 +35,14 @@ namespace WebAddessbookTests
             newEntry.E_mail = "Ivanov123@pochta.com";
 
             AppManager.Contact.CheckPresenceContact(newEntry);
-            AppManager.Contact.Delete(1);            
+            List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
+
+            AppManager.Contact.Delete(1);
+            
+            List<EntryDate> newContactList = AppManager.Contact.GetContactList();
+            oldContactList.RemoveAt(1);
+
+            AppManager.Contact.CheckContactResultByObj(oldContactList, newContactList);
         }
     }
 }

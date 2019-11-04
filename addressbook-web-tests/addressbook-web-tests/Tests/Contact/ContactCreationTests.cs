@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 
 namespace WebAddessbookTests
@@ -10,12 +11,54 @@ namespace WebAddessbookTests
         [Test]
         public void ContactCreationTest()
         {
-            EntryDate entry = new EntryDate("Ivan", "Ivanov", "Moscow, Pyshkina 3, room 1");
-            entry.MiddleName = "Ivanovich";
-            entry.Telephone = "777777";
-            entry.E_mail = "Ivanov@pochta.com";
+            List<EntryDate> oldContactsList = AppManager.Contact.GetContactList();
+            int count = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                EntryDate entry = new EntryDate("Ivan" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1");
+                entry.MiddleName = "Ivanovich" + i;
+                entry.Telephone = "777777" + i;
+                entry.E_mail = "Ivanov" + i + "@pochta.com";
 
-            AppManager.Contact.Create(entry);            
+                AppManager.Contact.Create(entry);
+                count++;
+            }
+
+            List<EntryDate> NewContactsList = AppManager.Contact.GetContactList();
+            
+            for (int i = 0; i < count; i++)
+            {
+                oldContactsList.Add(new EntryDate("Ivan" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1"));
+                
+            }            
+            AppManager.Contact.CheckContactResultByObj(oldContactsList, NewContactsList);
+        }
+
+        //Тест будет падать, так как есть баг на форме
+        [Test]
+        public void ContactCreationInvalidNameTest()
+        {
+            List<EntryDate> oldContactsList = AppManager.Contact.GetContactList();
+            int count = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                EntryDate entry = new EntryDate("Ivan'" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1");
+                entry.MiddleName = "Ivanovich" + i;
+                entry.Telephone = "777777" + i;
+                entry.E_mail = "Ivanov" + i + "@pochta.com";
+
+                AppManager.Contact.Create(entry);
+                count++;
+            }
+
+            List<EntryDate> NewContactsList = AppManager.Contact.GetContactList();
+
+            for (int i = 0; i < count; i++)
+            {
+                oldContactsList.Add(new EntryDate("Ivan'" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1"));
+
+            }            
+            AppManager.Contact.CheckContactResultByObj(oldContactsList, NewContactsList);
         }
     }
 }
