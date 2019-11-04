@@ -21,10 +21,26 @@ namespace WebAddessbookTests
             AppManager.Group.CheckPresenceGroup(group);
             List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
             
+            //Запоминаем группу, которую будем изменять
+            GroupData oldGroup = oldGroupList[0];
+            
             AppManager.Group.Modify(0, newGroup);
-            List<GroupData> newGroupList = AppManager.Group.GetGroupList();
+            
+            //Быстрая проверка
+            Assert.AreEqual(oldGroupList.Count, AppManager.Group.GetGroupCount());
 
+            List<GroupData> newGroupList = AppManager.Group.GetGroupList();
             AppManager.Group.CheckChangeGroupResultByObj(0, newGroup, oldGroupList, newGroupList);
+
+            //Проверяем изменение имени по нашему Id
+            foreach(GroupData g in newGroupList)
+            {
+                if(g.Id == oldGroup.Id)
+                {
+                    Assert.AreEqual(newGroup.GroupName, g.GroupName);
+                }
+            }
+
         }
     }
 }

@@ -60,6 +60,12 @@ namespace WebAddessbookTests
             return this;
         }
 
+        //Возвращаем кол-во элементов групп для быстрой проверки
+        public int GetGroupCount()
+        {
+            return driver.FindElements(By.CssSelector("span.group")).Count;
+        }
+
         //Получение всех созданных групп, метод реализован с помощью кеширования
         public List<GroupData> GetGroupList()
         {
@@ -71,7 +77,11 @@ namespace WebAddessbookTests
                 ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
                 foreach (IWebElement e in elements)
                 {
-                    groupCash.Add(new GroupData(e.Text));//Создаем объекты типа GroupData, кладем в список 
+                    //Добавляем в кеш лист новую группу
+                    groupCash.Add(new GroupData(e.Text) {
+                        //Сразу присваеваем свойству Id значение атрибута
+                        Id = e.FindElement(By.TagName("input")).GetAttribute("value")
+                    });
                 }                
             }
             return new List<GroupData>(groupCash);

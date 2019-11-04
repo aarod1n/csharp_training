@@ -23,6 +23,8 @@ namespace WebAddessbookTests
                 AppManager.Contact.Create(entry);
                 count++;
             }
+            
+            Assert.AreEqual(oldContactsList.Count + count, AppManager.Contact.GetContactCount());
 
             List<EntryDate> NewContactsList = AppManager.Contact.GetContactList();
             
@@ -34,6 +36,7 @@ namespace WebAddessbookTests
         }
 
         //Тест будет падать, так как есть баг на форме
+        //Добавление быстрой проверки сократило тест на 2 секунды
         [Test]
         public void ContactCreationInvalidNameTest()
         {
@@ -49,6 +52,8 @@ namespace WebAddessbookTests
                 AppManager.Contact.Create(entry);
                 count++;
             }
+
+            Assert.AreEqual(oldContactsList.Count + count, AppManager.Contact.GetContactCount());
 
             List<EntryDate> NewContactsList = AppManager.Contact.GetContactList();
 

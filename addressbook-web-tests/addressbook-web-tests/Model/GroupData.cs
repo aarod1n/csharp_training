@@ -8,43 +8,28 @@ namespace WebAddessbookTests
 {
     public class GroupData : IEquatable<GroupData>, IComparable<GroupData>
     {
-        //Поля класса
-        private string name;
-        private string header;
-        private string footer;
-
         //Свойства класса
-        public string GroupName
-        {
-            get { return name; }
-            set { name = value; }
-        }
-        public string GroupHeader
-        {
-            get { return header; }
-            set { header = value; }
-        }
-        public string GroupFooter
-        {
-            get { return footer; }
-            set { footer = value; }
-        }
+        public string GroupName { get; set; }        
+        public string GroupHeader { get; set; }       
+        public string GroupFooter { get; set; }
+        public string Id { get; set; }
+
 
         //Конструкторы класса
         public GroupData() { }
 
         public GroupData(string name)
         {
-            this.name = name;
-            this.header = "";
-            this.footer = "";
+            this.GroupName = name;
+            this.GroupHeader = "";
+            this.GroupFooter = "";
         }
                 
         public GroupData(string name, string header, string footer)
         {
-            this.name = name;
-            this.header = header;
-            this.footer = footer;
+            this.GroupName = name;
+            this.GroupHeader = header;
+            this.GroupFooter = footer;
         }
 
         //Методы класса

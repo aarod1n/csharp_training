@@ -79,6 +79,13 @@ namespace WebAddessbookTests
             return this;
         }
 
+        //Возвращаем кол-во элементов контактов для быстрой проверки
+        public int GetContactCount()
+        {
+            return driver.FindElements(By.CssSelector("tr[name=entry]")).Count;
+        }
+
+        //Получение всех созданных контактов, метод реализован с помощью кеширования
         public List<EntryDate> GetContactList()
         {
             if (contactCash == null)
@@ -100,7 +107,10 @@ namespace WebAddessbookTests
                         text[count] = c.Text;
                         count++;
                     }
-                    contactCash.Add(new EntryDate(text[2], text[1]));
+                    //Добавляем в кеш лист новый контакт
+                    contactCash.Add(new EntryDate(text[2], text[1]) {
+                        //Сразу присваеваем свойству Id значение атрибута
+                        Id = row.FindElement(By.TagName("input")).GetAttribute("id") });
                 }
             }
             return new List<EntryDate>(contactCash);

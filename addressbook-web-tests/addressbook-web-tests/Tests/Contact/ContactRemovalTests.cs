@@ -18,11 +18,25 @@ namespace WebAddessbookTests
 
             AppManager.Contact.CheckPresenceContact(newEntry);
             List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
+            
+            //Созраняем контакт,который будем удалять
+            EntryDate oldContact = oldContactList[1];
+
             AppManager.Contact.Removal(1);
+
+            //Быстрая проверка
+            Assert.AreEqual(oldContactList.Count - 1, AppManager.Contact.GetContactCount());
+
             List<EntryDate> newContactList = AppManager.Contact.GetContactList();
             oldContactList.RemoveAt(1);
             
             AppManager.Contact.CheckContactResultByObj(oldContactList, newContactList);
+
+            //Проверяем, что в новом списке контактов, нету с идентификитором удаленного.
+            foreach (EntryDate c in newContactList)
+            {
+                Assert.AreNotEqual(c.Id, oldContact.Id);
+            }
         }
 
         //Удаление через форму редактирования
@@ -37,12 +51,24 @@ namespace WebAddessbookTests
             AppManager.Contact.CheckPresenceContact(newEntry);
             List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
 
+            //Созраняем контакт,который будем удалять
+            EntryDate removalContact = oldContactList[1];
+
             AppManager.Contact.Delete(1);
-            
+
+            //Быстрая проверка
+            Assert.AreEqual(oldContactList.Count - 1, AppManager.Contact.GetContactCount());
+
             List<EntryDate> newContactList = AppManager.Contact.GetContactList();
             oldContactList.RemoveAt(1);
 
             AppManager.Contact.CheckContactResultByObj(oldContactList, newContactList);
+
+            //Проверяем, что в новом списке контактов, нету с идентификитором удаленного.
+            foreach (EntryDate e in newContactList)
+            {
+                Assert.AreNotEqual(e.Id, removalContact.Id);
+            }
         }
     }
 }

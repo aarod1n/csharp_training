@@ -8,48 +8,42 @@ namespace WebAddessbookTests
 {
     public class EntryDate : IEquatable<EntryDate>, IComparable<EntryDate>
     {
-        private string first;
-        private string middle;
-        private string last;
-        private string address;
-        private string telephone;
-        private string e_mail;
-
-        public string FirstName { get { return first; } set { first = value; } }
-        public string MiddleName { get { return middle; } set { middle = value; } }
-        public string LastName { get { return last; } set { last = value; } }
-        public string Address { get { return address; } set { address = value; } }
-        public string Telephone { get { return telephone; } set { telephone = value; } }
-        public string E_mail { get { return e_mail; } set { e_mail = value; } }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string Address { get; set; }
+        public string Telephone { get; set; }
+        public string E_mail { get; set; }
+        public string Id { get; set; }
 
         public EntryDate()
         {
-            first = "";
-            middle = "";
-            last = "";
-            address = "";
-            telephone = "";
-            e_mail = "";
+            FirstName = "";
+            MiddleName = "";
+            LastName = "";
+            Address = "";
+            Telephone = "";
+            E_mail = "";
         }
 
         public EntryDate(string first, string last)
         {
-            this.first = first;
-            this.last = last;
-            this.address = "";
-            middle = "";
-            telephone = "";
-            e_mail = "";
+            FirstName = first;
+            LastName = last;
+            Address = "";
+            MiddleName = "";
+            Telephone = "";
+            E_mail = "";
         }
 
         public EntryDate (string first, string last, string address)
         {
-            this.first = first;
-            this.last = last;
-            this.address = address;
-            middle = "";
-            telephone = "";
-            e_mail = "";
+            FirstName = first;
+            LastName = last;
+            Address = address;
+            MiddleName = "";
+            Telephone = "";
+            E_mail = "";
         }
 
         //Учим сравнивать объекты типа EntryDate

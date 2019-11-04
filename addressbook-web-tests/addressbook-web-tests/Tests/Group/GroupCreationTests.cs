@@ -16,6 +16,10 @@ namespace WebAddessbookTests
             group.GroupFooter = "test2footer";
             List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
             AppManager.Group.Created(group);
+
+            //Быстрая проверка
+            Assert.AreEqual(oldGroupList.Count + 1, AppManager.Group.GetGroupCount());
+
             List<GroupData> newGroupList = AppManager.Group.GetGroupList();
             oldGroupList.Add(group);
             AppManager.Group.CheckGroupResultByObj(oldGroupList, newGroupList);

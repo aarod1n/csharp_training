@@ -30,15 +30,31 @@ namespace WebAddessbookTests
             AppManager.Contact.CheckPresenceContact(newEntry);
             List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
 
-            EntryDate entry = new EntryDate("Petr1", "Petrov1", "Moscow, Lenina 101, room 3451");
-            entry.MiddleName = "Petrovich";
-            entry.Telephone = "123456789";
-            entry.E_mail = "PPetrov@pochta.by";
+            //Созраняем контакт,который будем изменять
+            EntryDate oldContact = oldContactList[0];
 
-            AppManager.Contact.Edit(0, entry);
+            EntryDate changeEntry = new EntryDate("Petr1", "Petrov1", "Moscow, Lenina 101, room 3451");
+            changeEntry.MiddleName = "Petrovich";
+            changeEntry.Telephone = "123456789";
+            changeEntry.E_mail = "PPetrov@pochta.by";
+
+            AppManager.Contact.Edit(0, changeEntry);
+
+            //Быстрая проверка
+            Assert.AreEqual(oldContactList.Count, AppManager.Contact.GetContactCount());
+
             List<EntryDate> newContactList = AppManager.Contact.GetContactList();
+            AppManager.Contact.CheckContactChangeResultByObj(oldContactList, newContactList, changeEntry, 0);
 
-            AppManager.Contact.CheckContactChangeResultByObj(oldContactList, newContactList, entry, 0);
+            //Проверяем изменение имени и фамилии по нашему Id
+            foreach (EntryDate e in newContactList)
+            {
+                if (e.Id == oldContact.Id)
+                {
+                    Assert.AreEqual(changeEntry.FirstName, e.FirstName);
+                    Assert.AreEqual(changeEntry.LastName, e.LastName);
+                }
+            }
         }
     }
 }
