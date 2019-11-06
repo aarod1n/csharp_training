@@ -33,7 +33,7 @@ namespace WebAddessbookTests
             //Созраняем контакт,который будем изменять
             EntryDate oldContact = oldContactList[0];
 
-            EntryDate changeEntry = new EntryDate("Petr1", "Petrov1", "Moscow, Lenina 101, room 3451");
+            EntryDate changeEntry = new EntryDate("Petr15", "Petrov15", "Moscow, Lenina 101, room 3451");
             changeEntry.MiddleName = "Petrovich";
             changeEntry.Telephone = "123456789";
             changeEntry.E_mail = "PPetrov@pochta.by";

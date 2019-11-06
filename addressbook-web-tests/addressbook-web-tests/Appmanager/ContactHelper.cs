@@ -99,18 +99,13 @@ namespace WebAddessbookTests
                 //Берем строку и парсим ее на ячейки, берем нужное значение ячейки.
                 foreach (IWebElement row in elements)
                 {
-                    ICollection<IWebElement> cell = row.FindElements(By.TagName("td"));
-                    string[] text = new string[cell.Count];
-                    int count = 0;
-                    foreach (IWebElement c in cell)
-                    {
-                        text[count] = c.Text;
-                        count++;
-                    }
-                    //Добавляем в кеш лист новый контакт
-                    contactCash.Add(new EntryDate(text[2], text[1]) {
-                        //Сразу присваеваем свойству Id значение атрибута
-                        Id = row.FindElement(By.TagName("input")).GetAttribute("id") });
+                    List<IWebElement> cell = row.FindElements(By.TagName("td")).ToList();
+                       //Добавляем в кеш лист новый контакт
+                        contactCash.Add(new EntryDate(cell[2].Text, cell[1].Text)
+                        {
+                            //Сразу присваеваем свойству Id значение атрибута
+                            Id = row.FindElement(By.TagName("input")).GetAttribute("id")
+                        });
                 }
             }
             return new List<EntryDate>(contactCash);
@@ -131,7 +126,6 @@ namespace WebAddessbookTests
         }
         public void CheckContactChangeResultByObj(List<EntryDate> oldContactsList, List<EntryDate> newContactsList, EntryDate entry, int index)
         {
-            oldContactsList.Sort();
             oldContactsList[index].FirstName = entry.FirstName;
             oldContactsList[index].LastName = entry.LastName;
             oldContactsList.Sort();
