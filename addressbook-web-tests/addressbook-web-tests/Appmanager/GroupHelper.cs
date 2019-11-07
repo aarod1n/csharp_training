@@ -78,11 +78,28 @@ namespace WebAddessbookTests
                 foreach (IWebElement e in elements)
                 {
                     //Добавляем в кеш лист новую группу
-                    groupCash.Add(new GroupData(e.Text) {
+                    //первое обращение к браузеру в цикле для получения имени группы убрали
+                    groupCash.Add(new GroupData() {
                         //Сразу присваеваем свойству Id значение атрибута
                         Id = e.FindElement(By.TagName("input")).GetAttribute("value")
                     });
-                }                
+                }
+
+                //Заполняем имена для списка групп через 1 обращение к браузеру
+                string allGroupsNames = driver.FindElement(By.CssSelector("div#content form")).Text;
+                string[] parts = allGroupsNames.Split('\n');
+                int shift = groupCash.Count - parts.Length;
+                for(int i = 0; i < groupCash.Count; i++)
+                {
+                    if (i < shift)
+                    {
+                        groupCash[i].GroupName = "";
+                    }
+                    else
+                    {
+                        groupCash[i].GroupName = parts[i - shift].Trim();
+                    }
+                }
             }
             return new List<GroupData>(groupCash);
         }

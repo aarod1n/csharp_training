@@ -8,21 +8,49 @@ namespace WebAddessbookTests
 {
     public class EntryDate : IEquatable<EntryDate>, IComparable<EntryDate>
     {
+        private string allPhone;
+
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
-        public string Telephone { get; set; }
+        public string MobilePhone { get; set; }
+        public string HomePhone { get; set; }
+        public string WorkPhone { get; set; }
+        public string AllPhone
+        {
+            get
+            {
+                if(allPhone != null)
+                {
+                    return allPhone;
+                }
+                else
+                {
+                    return (CleanUp(MobilePhone) + CleanUp(HomePhone) + CleanUp(WorkPhone)).Trim();
+                }
+            }
+            set
+            {
+                allPhone = value;
+            }
+        }
+               
+
         public string E_mail { get; set; }
         public string Id { get; set; }
+
+
 
         public EntryDate()
         {
             FirstName = "";
-            MiddleName = "";
             LastName = "";
+            MiddleName = "";            
             Address = "";
-            Telephone = "";
+            MobilePhone = "";
+            HomePhone = "";
+            WorkPhone = "";
             E_mail = "";
         }
 
@@ -30,9 +58,11 @@ namespace WebAddessbookTests
         {
             FirstName = first;
             LastName = last;
-            Address = "";
             MiddleName = "";
-            Telephone = "";
+            Address = "";
+            MobilePhone = "";
+            HomePhone = "";
+            WorkPhone = "";
             E_mail = "";
         }
 
@@ -42,7 +72,9 @@ namespace WebAddessbookTests
             LastName = last;
             Address = address;
             MiddleName = "";
-            Telephone = "";
+            MobilePhone = "";
+            HomePhone = "";
+            WorkPhone = "";
             E_mail = "";
         }
 
@@ -85,6 +117,19 @@ namespace WebAddessbookTests
                 return FirstName.CompareTo(other.FirstName);
             }
             else return LastName.CompareTo(other.LastName);
+        }
+
+        private string CleanUp(string phone)
+        {
+            if(phone == null || phone == "")
+            {
+                return "";
+            }
+            else
+            {
+               return phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "") + "\r\n";
+            }
+
         }
     }
 

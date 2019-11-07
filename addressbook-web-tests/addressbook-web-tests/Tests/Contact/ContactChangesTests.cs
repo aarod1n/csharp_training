@@ -12,7 +12,7 @@ namespace WebAddessbookTests
         {
             EntryDate newEntry = new EntryDate("Ivan123", "Ivanov123", "Moscow, Pyshkina 3, room 123");
             newEntry.MiddleName = "Ivanovich123";
-            newEntry.Telephone = "777777";
+            newEntry.MobilePhone = "777777";
             newEntry.E_mail = "Ivanov123@pochta.com";
 
             AppManager.Contact.CheckPresenceContact(newEntry);
@@ -24,7 +24,7 @@ namespace WebAddessbookTests
         {
             EntryDate newEntry = new EntryDate("Ivan123", "Ivanov123", "Moscow, Pyshkina 3, room 123");
             newEntry.MiddleName = "Ivanovich123";
-            newEntry.Telephone = "777777";
+            newEntry.MobilePhone = "777777";
             newEntry.E_mail = "Ivanov123@pochta.com";
 
             AppManager.Contact.CheckPresenceContact(newEntry);
@@ -33,9 +33,9 @@ namespace WebAddessbookTests
             //Созраняем контакт,который будем изменять
             EntryDate oldContact = oldContactList[0];
 
-            EntryDate changeEntry = new EntryDate("Petr15", "Petrov15", "Moscow, Lenina 101, room 3451");
+            EntryDate changeEntry = new EntryDate("Petr17", "Petrov17", "Moscow, Lenina 101, room 3451");
             changeEntry.MiddleName = "Petrovich";
-            changeEntry.Telephone = "123456789";
+            changeEntry.MobilePhone = "123456789";
             changeEntry.E_mail = "PPetrov@pochta.by";
 
             AppManager.Contact.Edit(0, changeEntry);

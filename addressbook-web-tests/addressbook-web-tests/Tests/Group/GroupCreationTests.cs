@@ -24,5 +24,22 @@ namespace WebAddessbookTests
             oldGroupList.Add(group);
             AppManager.Group.CheckGroupResultByObj(oldGroupList, newGroupList);
         }
+
+        [Test]
+        public void EmptyGroupCreationTest()
+        {
+            GroupData group = new GroupData("");
+            group.GroupHeader = "";
+            group.GroupFooter = "";
+            List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
+            AppManager.Group.Created(group);
+
+            //Быстрая проверка
+            Assert.AreEqual(oldGroupList.Count + 1, AppManager.Group.GetGroupCount());
+
+            List<GroupData> newGroupList = AppManager.Group.GetGroupList();
+            oldGroupList.Add(group);
+            AppManager.Group.CheckGroupResultByObj(oldGroupList, newGroupList);
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace WebAddessbookTests
             {
                 EntryDate entry = new EntryDate("Ivan" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1");
                 entry.MiddleName = "Ivanovich" + i;
-                entry.Telephone = "777777" + i;
+                entry.MobilePhone = "777777" + i;
                 entry.E_mail = "Ivanov" + i + "@pochta.com";
 
                 AppManager.Contact.Create(entry);
@@ -46,7 +46,7 @@ namespace WebAddessbookTests
             {
                 EntryDate entry = new EntryDate("Ivan'" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1");
                 entry.MiddleName = "Ivanovich" + i;
-                entry.Telephone = "777777" + i;
+                entry.MobilePhone = "777777" + i;
                 entry.E_mail = "Ivanov" + i + "@pochta.com";
 
                 AppManager.Contact.Create(entry);

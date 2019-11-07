@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 
 
+
 namespace WebAddessbookTests
 {
     public class LoginHelper : BaseHelper
@@ -32,7 +33,14 @@ namespace WebAddessbookTests
 
         public bool IsLoggetIn(AccountData user)
         {
-            return IsLoggetIn() && driver.FindElement(By.Name("logout")).FindElement(By.TagName("b")).Text == "(" + user.UserName + ")";
+            return IsLoggetIn() 
+                && GetLoggetUserName() == user.UserName;
+        }
+
+        public string GetLoggetUserName()
+        {
+            string text = driver.FindElement(By.Name("logout")).FindElement(By.TagName("b")).Text;
+            return text.Substring(1, text.Length - 2);
         }
 
         //Метод для logoff'a

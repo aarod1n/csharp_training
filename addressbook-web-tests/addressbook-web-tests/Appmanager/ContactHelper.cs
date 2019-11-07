@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -14,7 +15,8 @@ namespace WebAddessbookTests
         {
         }
 
-        //2 lvl 
+        //2 lvl
+        ///////////////////////////////////////////////////////////////////////////
         public ContactHelper Create(EntryDate entry)
         {
             manager.Navigator.OpenStartPage();
@@ -51,7 +53,7 @@ namespace WebAddessbookTests
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContactChange(v+1);
+            SelectContactChange(v);
             FillEntryForm(entry);
             SubmitUpdateEntry();
             manager.Navigator.GoToHome();
@@ -133,7 +135,53 @@ namespace WebAddessbookTests
             Assert.AreEqual(oldContactsList, newContactsList);
         }
 
-        //1 lvl 
+        //Получаем элементы из таблицы, парсим по нужным полям.
+        public EntryDate GetContactInformationFromTable(int index)
+        {
+            manager.Navigator.GoToHome();
+            IList<IWebElement> cell = driver.FindElements(By.CssSelector("tr[name=entry]"))[index-1].FindElements(By.TagName("td"));
+            
+            string lastname = cell[1].Text;
+            string firstname = cell[2].Text;
+            string address = cell[3].Text;
+            string email = cell[4].Text;
+            string allPhone = cell[5].Text;            
+
+            return new EntryDate(firstname, lastname, address)
+            {              
+                AllPhone = allPhone,
+                E_mail = email
+            };
+        }
+
+        //Получаем элементы с формы, парсим по нужным полям.
+        public EntryDate GetContactInformationFromEditForm(int index)
+        {
+            manager.Navigator.GoToHome();
+            manager.Contact.SelectContactChange(index);
+
+            string firstname = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+            string middlename = driver.FindElement(By.Name("middlename")).GetAttribute("value");
+            string lastname = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            string address = driver.FindElement(By.Name("address")).GetAttribute("value");
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
+            string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string email = driver.FindElement(By.Name("email")).GetAttribute("value");
+
+            return new EntryDate(firstname, lastname, address) 
+            {
+                MiddleName = middlename, 
+                Address = address , 
+                MobilePhone = mobilePhone, 
+                HomePhone = homePhone, 
+                WorkPhone = workPhone, 
+                E_mail = email
+            }; 
+        }
+
+        //1 lvl         
+        ///////////////////////////////////////////////////////////////////////////
         public ContactHelper GoToAddNewEntry() 
         { 
             driver.FindElement(By.LinkText("add new")).Click(); 
@@ -146,7 +194,7 @@ namespace WebAddessbookTests
             Type(By.Name("lastname"), entry.LastName);
             Type(By.Name("address"), entry.Address);
             Type(By.Name("middlename"), entry.MiddleName);
-            Type(By.Name("mobile"), entry.Telephone);
+            Type(By.Name("mobile"), entry.MobilePhone);
             Type(By.Name("email"), entry.E_mail);
 
             //Чекнем, есть ли данный выпадающий список на странице. Так как форма создания и форма редактирования разные.
@@ -251,7 +299,7 @@ namespace WebAddessbookTests
             {
                 //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
                 List<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']")).ToList();
-                if (v <= elements.Count && v > 0)
+                if (v < elements.Count && v > 0)
                     elements[v-1].Click();                                
             }
             return this;
