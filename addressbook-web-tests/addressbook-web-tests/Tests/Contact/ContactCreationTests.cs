@@ -7,61 +7,36 @@ namespace WebAddessbookTests
 {
     [TestFixture]
     public class ContactCreationTests : AuhtTestsBase
-    {  
-        [Test]
-        public void ContactCreationTest()
+    {
+        //Создаем список с объектами EntryDate у которых случайным образом заполняются свойства.
+        public static IEnumerable<EntryDate> RondomContactDataProvider()
         {
-            List<EntryDate> oldContactsList = AppManager.Contact.GetContactList();
-            int count = 0;
+            List<EntryDate> entry = new List<EntryDate>();
+
             for (int i = 0; i < 3; i++)
             {
-                EntryDate entry = new EntryDate("Ivan" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1");
-                entry.MiddleName = "Ivanovich" + i;
-                entry.MobilePhone = "777777" + i;
-                entry.E_mail = "Ivanov" + i + "@pochta.com";
-
-                AppManager.Contact.Create(entry);
-                count++;
+                entry.Add(new EntryDate()
+                {
+                    FirstName = GenerationRandomString(10, false),
+                    MiddleName = GenerationRandomString(10, false),
+                    LastName = GenerationRandomString(10, false),
+                    Address = GenerationRandomString(30, false),
+                    MobilePhone = GenerationRandomString(10, true),
+                    E_mail = GenerationRandomString(10, false)
+                });
             }
-            
-            Assert.AreEqual(oldContactsList.Count + count, AppManager.Contact.GetContactCount());
-
-            List<EntryDate> NewContactsList = AppManager.Contact.GetContactList();
-            
-            for (int i = 0; i < count; i++)
-            {
-                oldContactsList.Add(new EntryDate("Ivan" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1"));                
-            }            
-            AppManager.Contact.CheckContactResultByObj(oldContactsList, NewContactsList);
+            return entry;
         }
 
-        //Тест будет падать, так как есть баг на форме
-        //Добавление быстрой проверки сократило тест на 2 секунды
-        [Test]
-        public void ContactCreationInvalidNameTest()
+
+        [Test, TestCaseSource("RondomContactDataProvider")]
+        public void ContactCreationTest(EntryDate entry)
         {
             List<EntryDate> oldContactsList = AppManager.Contact.GetContactList();
-            int count = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                EntryDate entry = new EntryDate("Ivan'" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1");
-                entry.MiddleName = "Ivanovich" + i;
-                entry.MobilePhone = "777777" + i;
-                entry.E_mail = "Ivanov" + i + "@pochta.com";
-
-                AppManager.Contact.Create(entry);
-                count++;
-            }
-
-            Assert.AreEqual(oldContactsList.Count + count, AppManager.Contact.GetContactCount());
-
+            AppManager.Contact.Create(entry);
+            Assert.AreEqual(oldContactsList.Count + 1, AppManager.Contact.GetContactCount());
+            oldContactsList.Add(entry);
             List<EntryDate> NewContactsList = AppManager.Contact.GetContactList();
-
-            for (int i = 0; i < count; i++)
-            {
-                oldContactsList.Add(new EntryDate("Ivan'" + i, "Ivanov" + i, "Moscow, Pyshkina 3, room 1"));
-
-            }            
             AppManager.Contact.CheckContactResultByObj(oldContactsList, NewContactsList);
         }
     }

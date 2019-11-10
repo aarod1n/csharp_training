@@ -20,16 +20,16 @@ namespace WebAddessbookTests
 
         public GroupData(string name)
         {
-            this.GroupName = name;
-            this.GroupHeader = "";
-            this.GroupFooter = "";
+            GroupName = name;
+            GroupHeader = "";
+            GroupFooter = "";
         }
                 
         public GroupData(string name, string header, string footer)
         {
-            this.GroupName = name;
-            this.GroupHeader = header;
-            this.GroupFooter = footer;
+            GroupName = name;
+            GroupHeader = header;
+            GroupFooter = footer;
         }
 
         //Методы класса
@@ -57,7 +57,7 @@ namespace WebAddessbookTests
 
         public override string ToString()
         {
-            return "name=" + GroupName;
+            return "\nName=" + GroupName + "\nHeader= " + GroupHeader + "\nFooter= " + GroupFooter;
         }
 
         //Для сортировки списков, сравнение

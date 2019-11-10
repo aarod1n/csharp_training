@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using System.Text.RegularExpressions;
 
 
 namespace WebAddessbookTests
@@ -27,44 +28,44 @@ namespace WebAddessbookTests
             return this;
         }
 
-        public ContactHelper ChangeGroup(int v)
+        public ContactHelper ChangeGroup(int index)
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContact(v);
+            SelectContact(index);
             SelectGroupAddTo();
             AddToGroupClick();
             manager.Navigator.GoToHome();
             return this;
         }
 
-        public ContactHelper Removal(int v)
+        public ContactHelper Removal(int index)
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContact(v+1);
+            SelectContact(index);
             DeleteContact();
             ClosedAlert();
             manager.Navigator.GoToHome();
             return this;
         }
 
-        public ContactHelper Edit(int v, EntryDate entry)
+        public ContactHelper Edit(int index, EntryDate entry)
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContactChange(v);
+            SelectContactChange(index + 1);
             FillEntryForm(entry);
             SubmitUpdateEntry();
             manager.Navigator.GoToHome();
             return this;
         }
 
-        public ContactHelper Delete(int v)
+        public ContactHelper Delete(int index)
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
-            SelectContactChange(v+1);
+            SelectContactChange(index);
             SubmitDeleteEntry();
             manager.Navigator.GoToHome();
             return this;
@@ -102,12 +103,12 @@ namespace WebAddessbookTests
                 foreach (IWebElement row in elements)
                 {
                     List<IWebElement> cell = row.FindElements(By.TagName("td")).ToList();
-                       //Добавляем в кеш лист новый контакт
-                        contactCash.Add(new EntryDate(cell[2].Text, cell[1].Text)
-                        {
-                            //Сразу присваеваем свойству Id значение атрибута
-                            Id = row.FindElement(By.TagName("input")).GetAttribute("id")
-                        });
+                    //Добавляем в кеш лист новый контакт
+                    contactCash.Add(new EntryDate(cell[2].Text, cell[1].Text)
+                    {
+                        //Сразу присваеваем свойству Id значение атрибута
+                        Id = row.FindElement(By.TagName("input")).GetAttribute("id")
+                    });
                 }
             }
             return new List<EntryDate>(contactCash);
@@ -139,16 +140,16 @@ namespace WebAddessbookTests
         public EntryDate GetContactInformationFromTable(int index)
         {
             manager.Navigator.GoToHome();
-            IList<IWebElement> cell = driver.FindElements(By.CssSelector("tr[name=entry]"))[index-1].FindElements(By.TagName("td"));
-            
+            IList<IWebElement> cell = driver.FindElements(By.CssSelector("tr[name=entry]"))[index - 1].FindElements(By.TagName("td"));
+
             string lastname = cell[1].Text;
             string firstname = cell[2].Text;
             string address = cell[3].Text;
             string email = cell[4].Text;
-            string allPhone = cell[5].Text;            
+            string allPhone = cell[5].Text;
 
             return new EntryDate(firstname, lastname, address)
-            {              
+            {
                 AllPhone = allPhone,
                 E_mail = email
             };
@@ -164,20 +165,42 @@ namespace WebAddessbookTests
             string middlename = driver.FindElement(By.Name("middlename")).GetAttribute("value");
             string lastname = driver.FindElement(By.Name("lastname")).GetAttribute("value");
             string address = driver.FindElement(By.Name("address")).GetAttribute("value");
-            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
             string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
-            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
             string email = driver.FindElement(By.Name("email")).GetAttribute("value");
 
-            return new EntryDate(firstname, lastname, address) 
+            //string nickname = driver.FindElement(By.Name("nickname")).GetAttribute("value");
+            //string company = driver.FindElement(By.Name("company")).GetAttribute("value");
+            //string title = driver.FindElement(By.Name("title")).GetAttribute("value");
+            //string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");                        
+            //string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            //string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");
+            //string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            //string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+            //string homepage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
+            //string secondaryHomePhone = driver.FindElement(By.Name("phone2")).GetAttribute("value");
+
+            return new EntryDate(firstname, lastname)
             {
-                MiddleName = middlename, 
-                Address = address , 
-                MobilePhone = mobilePhone, 
-                HomePhone = homePhone, 
-                WorkPhone = workPhone, 
+                MiddleName = middlename,
+                Address = address,
+                MobilePhone = mobilePhone,
                 E_mail = email
-            }; 
+            };
+        }
+
+        //Получаем элементы с формы свойств контакта, парсим по нужным полям.
+        public EntryDate GetContactInformationFromDetails(int index)
+        {
+            manager.Navigator.GoToHome();
+            manager.Contact.SelectContactDetails(index);
+            string allText = driver.FindElement(By.Id("content")).Text;
+            string fml = driver.FindElement(By.Id("content")).FindElement(By.TagName("b")).Text;
+
+            return new EntryDate()
+            {
+                FML = fml,
+                AllInfo = allText
+            };
         }
 
         //1 lvl         
@@ -293,16 +316,31 @@ namespace WebAddessbookTests
             return this;
         }
 
-        public ContactHelper SelectContactChange(int v)
+        public ContactHelper SelectContactChange(int index)
         {
             if (IsElementPresent(By.CssSelector("a[href^='edit.php?']")))
             {
                 //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
-                List<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']")).ToList();
-                if (v < elements.Count && v > 0)
-                    elements[v-1].Click();                                
+                IList<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='edit.php?']"));
+                if (index < elements.Count && index > 0)
+                    elements[index - 1].Click();
             }
             return this;
         }
+
+        public ContactHelper SelectContactDetails(int index)
+        {
+            if (IsElementPresent(By.CssSelector("a[href^='view.php?id']")))
+            {
+                //Создаем список елементов состоящий из ссылок имеющих название "edit.php?" и выбираем нужный из существующих.
+                IList<IWebElement> elements = driver.FindElements(By.CssSelector("a[href^='view.php?id']"));
+                if (index < elements.Count && index > 0)
+                    elements[index - 1].Click();
+            }
+            return this;
+        }
+
+        
+
     }
 }

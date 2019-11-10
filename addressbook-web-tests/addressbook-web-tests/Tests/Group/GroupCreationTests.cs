@@ -7,30 +7,25 @@ namespace WebAddessbookTests
     [TestFixture]
     public class GroupCerationTests : AuhtTestsBase
     {
-
-        [Test]
-        public void GroupCreationTest()
+        //Создаем список с объектами GroupData у которых случайным образом заполняются свойства.
+        public static IEnumerable<GroupData> RondomGroupDataProvider()
         {
-            GroupData group = new GroupData("test5454542name");
-            group.GroupHeader = "test2header";
-            group.GroupFooter = "test2footer";
-            List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
-            AppManager.Group.Created(group);
-
-            //Быстрая проверка
-            Assert.AreEqual(oldGroupList.Count + 1, AppManager.Group.GetGroupCount());
-
-            List<GroupData> newGroupList = AppManager.Group.GetGroupList();
-            oldGroupList.Add(group);
-            AppManager.Group.CheckGroupResultByObj(oldGroupList, newGroupList);
+            List<GroupData> group = new List<GroupData>();
+            for(int i = 0; i < 5; i++)
+            {
+                group.Add(new GroupData()
+                {
+                    GroupHeader = GenerationRandomString(5, false),
+                    GroupName = GenerationRandomString(10, false),
+                    GroupFooter = GenerationRandomString(10, false)
+                });
+            }
+            return group;
         }
 
-        [Test]
-        public void EmptyGroupCreationTest()
+        [Test, TestCaseSource("RondomGroupDataProvider")]
+        public void GroupCreationTest(GroupData group)
         {
-            GroupData group = new GroupData("");
-            group.GroupHeader = "";
-            group.GroupFooter = "";
             List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
             AppManager.Group.Created(group);
 

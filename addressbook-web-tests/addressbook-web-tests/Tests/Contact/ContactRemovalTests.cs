@@ -20,7 +20,7 @@ namespace WebAddessbookTests
             List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
             
             //Созраняем контакт,который будем удалять
-            EntryDate oldContact = oldContactList[1];
+            EntryDate oldContact = oldContactList[0];
 
             AppManager.Contact.Removal(1);
 
@@ -28,7 +28,7 @@ namespace WebAddessbookTests
             Assert.AreEqual(oldContactList.Count - 1, AppManager.Contact.GetContactCount());
 
             List<EntryDate> newContactList = AppManager.Contact.GetContactList();
-            oldContactList.RemoveAt(1);
+            oldContactList.RemoveAt(0);
             
             AppManager.Contact.CheckContactResultByObj(oldContactList, newContactList);
 
@@ -52,7 +52,7 @@ namespace WebAddessbookTests
             List<EntryDate> oldContactList = AppManager.Contact.GetContactList();
 
             //Созраняем контакт,который будем удалять
-            EntryDate removalContact = oldContactList[1];
+            EntryDate removalContact = oldContactList[0];
 
             AppManager.Contact.Delete(1);
 
@@ -60,7 +60,7 @@ namespace WebAddessbookTests
             Assert.AreEqual(oldContactList.Count - 1, AppManager.Contact.GetContactCount());
 
             List<EntryDate> newContactList = AppManager.Contact.GetContactList();
-            oldContactList.RemoveAt(1);
+            oldContactList.RemoveAt(0);
 
             AppManager.Contact.CheckContactResultByObj(oldContactList, newContactList);
 

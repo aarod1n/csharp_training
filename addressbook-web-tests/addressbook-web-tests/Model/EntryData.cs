@@ -3,31 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace WebAddessbookTests
 {
     public class EntryDate : IEquatable<EntryDate>, IComparable<EntryDate>
     {
         private string allPhone;
+        private string allEmail;
+        private string fml;
+        private string allInfo;
 
+        //Свойства
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
+        public string NickName { get; set; }
         public string Address { get; set; }
         public string MobilePhone { get; set; }
         public string HomePhone { get; set; }
         public string WorkPhone { get; set; }
+        public string SecondaryHomePhone { get; set; }
+        public string E_mail { get; set; }
+        public string E_mail2 { get; set; }
+        public string E_mail3 { get; set; }
+        
         public string AllPhone
         {
             get
             {
-                if(allPhone != null)
+                if (allPhone != null)
                 {
                     return allPhone;
                 }
                 else
                 {
-                    return (CleanUp(MobilePhone) + CleanUp(HomePhone) + CleanUp(WorkPhone)).Trim();
+                    // + Trim - уберает лишние пробелы с начала, конца строки.
+                    return (CleanUp(HomePhone, 1) + CleanUp(MobilePhone, 1) + CleanUp(WorkPhone, 1) + CleanUp(SecondaryHomePhone, 1)).Trim();
                 }
             }
             set
@@ -35,18 +48,77 @@ namespace WebAddessbookTests
                 allPhone = value;
             }
         }
-               
 
-        public string E_mail { get; set; }
-        public string Id { get; set; }
+        public string AllEmail
+        {
+            get
+            {
+                if (allEmail != null)
+                {
+                    return allEmail;
+                }
+                else
+                {
+                    // + Trim - уберает лишние пробелы с начала, конца строки.
+                    return (CleanUp(E_mail, 2) + CleanUp(E_mail2, 2) + CleanUp(E_mail3, 2)).Trim();
+                }
+            }
+            set
+            {
+                allEmail = value;
+            }
+        }
 
+        public string FML
+        {
+            get
+            {
+                if (fml != null)
+                {
+                    return fml;
+                }
+                else
+                {
+                    return (FirstName + " " + MiddleName + " " + LastName).Trim();
+                }
+            }
+            set
+            {
+                fml = value;
+            }
+        }
 
+        public string AllInfo 
+        {
+            get
+            {
+                if(allInfo != null)
+                {
+                    return allInfo;
+                }
+                else
+                {
+                    return (FirstName + " " + MiddleName + " " + LastName
+                        + "\r\n" 
+                        + Address
+                        + "\r\n\r\n"
+                        + "M: " + MobilePhone
+                        + "\r\n\r\n"
+                        + E_mail).Trim();
+                }
+            }
+            set
+            {
+                allInfo = value;
+            }
+        }
 
+        //Конструкторы
         public EntryDate()
         {
             FirstName = "";
             LastName = "";
-            MiddleName = "";            
+            MiddleName = "";
             Address = "";
             MobilePhone = "";
             HomePhone = "";
@@ -66,7 +138,7 @@ namespace WebAddessbookTests
             E_mail = "";
         }
 
-        public EntryDate (string first, string last, string address)
+        public EntryDate(string first, string last, string address)
         {
             FirstName = first;
             LastName = last;
@@ -89,7 +161,7 @@ namespace WebAddessbookTests
             {
                 return true;
             }
-            
+
             return FirstName == other.FirstName && LastName == other.LastName;
         }
 
@@ -97,12 +169,12 @@ namespace WebAddessbookTests
         //Если они равны, значит объекты одинаковые, если нет продолжаем равнивать bool Equals
         public override int GetHashCode()
         {
-            return FirstName.GetHashCode() * LastName.GetHashCode() ; 
+            return FirstName.GetHashCode() * LastName.GetHashCode();
         }
 
         public override string ToString()
         {
-            return "name=" + FirstName;
+            return "\nname= " + FirstName + "\nmiddleName= " + MiddleName + "\nlastName= " + LastName + "\ne-mail= " + E_mail;
         }
 
         //Для сортировки списков, сравнение
@@ -119,18 +191,45 @@ namespace WebAddessbookTests
             else return LastName.CompareTo(other.LastName);
         }
 
-        private string CleanUp(string phone)
+        //Вариант option = 1 для склейки телефонов 
+        //Берем строку, заменяем "-()" на "", добавляем в конец "\r\n", возвращаем.
+        //Вариант option = 2 для склейки почты.
+        //Берем строку и добавляем "\r\n", возвращаем.
+        //Вариант 3 для склейки всех(пока выборочно) полей для 3 проверки
+        private string CleanUp(string text, int option)
         {
-            if(phone == null || phone == "")
+            string result = "";
+
+            switch (option)
             {
-                return "";
-            }
-            else
-            {
-               return phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "") + "\r\n";
+                case 1:
+                    if (text == null || text == "")
+                    {
+                        result = "";
+                    }
+                    else
+                    {
+                        result = Regex.Replace(text, "[-()]", "") + "\r\n";
+                    }
+                    break;
+                
+                case 2:
+                    if (text == null || text == "")
+                    {
+
+                        result = "";
+                    }
+                    else
+                    {
+                        result = text + "\r\n";
+                    }
+                    break;
             }
 
+            return result;
         }
+
+        
     }
 
 }

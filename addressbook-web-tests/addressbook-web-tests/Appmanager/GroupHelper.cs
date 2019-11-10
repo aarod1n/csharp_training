@@ -125,8 +125,8 @@ namespace WebAddessbookTests
 
         public void CheckChangeGroupResultByObj(int index, GroupData group, List<GroupData> oldGroupList, List<GroupData> newGroupList)
         {
-            oldGroupList.Sort();
             oldGroupList[index].GroupName = group.GroupName;
+            oldGroupList.Sort();
             newGroupList.Sort();
             Assert.AreEqual(oldGroupList, newGroupList);
         }
