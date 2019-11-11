@@ -17,12 +17,12 @@ namespace WebAddessbookTests
             {
                 entry.Add(new EntryDate()
                 {
-                    FirstName = GenerationRandomString(10, false),
-                    MiddleName = GenerationRandomString(10, false),
-                    LastName = GenerationRandomString(10, false),
-                    Address = GenerationRandomString(30, false),
-                    MobilePhone = GenerationRandomString(10, true),
-                    E_mail = GenerationRandomString(10, false)
+                    FirstName = GenerationRandomString(10),
+                    MiddleName = GenerationRandomString(10),
+                    LastName = GenerationRandomString(10),
+                    Address = GenerationRandomString(10),
+                    MobilePhone = GenerationRandomString(10),
+                    E_mail = GenerationRandomString(10)
                 });
             }
             return entry;
