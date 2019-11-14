@@ -4,6 +4,8 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace WebAddessbookTests
 {
@@ -11,7 +13,7 @@ namespace WebAddessbookTests
     public class GroupCerationTests : AuhtTestsBase
     {
         //Создаем список с объектами GroupData у которых случайным образом заполняются свойства.
-        public static IEnumerable<GroupData> RondomGroupDataProvider()
+        public static IEnumerable<GroupData> RandomGroupDataProvider()
         {
             List<GroupData> group = new List<GroupData>();
             for(int i = 0; i < 5; i++)
@@ -28,19 +30,19 @@ namespace WebAddessbookTests
         //Читаем данные из файла csv
         public static IEnumerable<GroupData> GroupDataFromCsvFile()
         {
-            List<GroupData> group = new List<GroupData>();
+            List<GroupData> groups = new List<GroupData>();
             string[] lines = File.ReadAllLines(@"groups.csv");
             foreach (string l in lines)
             {
                 string[] parts = l.Split(',');
-                group.Add(new GroupData(parts[0])
+                groups.Add(new GroupData(parts[0])
                 {
                     GroupHeader = parts[1],
                     GroupFooter = parts[2]
                 });
             }
 
-            return group;
+            return groups;
         }
 
         //Читаем из xml файла
@@ -50,7 +52,45 @@ namespace WebAddessbookTests
                 new XmlSerializer(typeof(List<GroupData>)).Deserialize(new StreamReader(@"groups.xml"));
         }
 
-        [Test, TestCaseSource("GroupDataFromXmlFile")]
+        //Читаем из json файла
+        public static IEnumerable<GroupData> GroupDataFromJsonFile()
+        {
+            return JsonConvert.DeserializeObject<List<GroupData>>(File.ReadAllText(@"groups.json"));
+        }
+
+
+        //Читаем из excel файла
+        public static IEnumerable<GroupData> GroupDataFromExcelFile()
+        {
+            List<GroupData> groups = new List<GroupData>();
+            //Создаем приложение для работы с excel'em
+            Excel.Application app = new Excel.Application();
+            
+            //Создаем новый док
+            Excel.Workbook wb = app.Workbooks.Open(Path.Combine(Directory.GetCurrentDirectory(), @"groups.xlsx"));
+            
+            //Выбираем активную страницу
+            Excel.Worksheet sheet = wb.ActiveSheet;
+            
+            //Берем область с данными
+            Excel.Range range = sheet.UsedRange;
+            for(int i =1; i <= range.Count; i++)
+            {
+                groups.Add(new GroupData()
+                {
+                    GroupName = range.Cells[i, 1].Value,
+                    GroupHeader = range.Cells[i, 2].Value,
+                    GroupFooter = range.Cells[i, 3].Value
+                });
+            }
+            wb.Close();
+            //app.Visible = false;
+            app.Quit();
+            return groups;
+            
+        }
+
+        [Test, TestCaseSource("GroupDataFromJsonFile")]
         public void GroupCreationTest(GroupData group)
         {
             List<GroupData> oldGroupList = AppManager.Group.GetGroupList();

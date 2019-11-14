@@ -1,6 +1,11 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace WebAddessbookTests
@@ -9,7 +14,7 @@ namespace WebAddessbookTests
     public class ContactCreationTests : AuhtTestsBase
     {
         //Создаем список с объектами EntryDate у которых случайным образом заполняются свойства.
-        public static IEnumerable<EntryDate> RondomContactDataProvider()
+        public static IEnumerable<EntryDate> RandomContactDataProvider()
         {
             List<EntryDate> entry = new List<EntryDate>();
 
@@ -28,8 +33,21 @@ namespace WebAddessbookTests
             return entry;
         }
 
+        //Читаем из xml файла
+        public static IEnumerable<EntryDate> ContactDataFromXmlFile()
+        {
+            return (List<EntryDate>)
+                new XmlSerializer(typeof(List<EntryDate>)).Deserialize(new StreamReader(@"contacts.xml"));
+        }
 
-        [Test, TestCaseSource("RondomContactDataProvider")]
+        //Читаем из json файла
+        public static IEnumerable<EntryDate> ContactDataFromJsonFile()
+        {
+            return JsonConvert.DeserializeObject<List<EntryDate>>(File.ReadAllText(@"contacts.json"));
+        }
+
+
+        [Test, TestCaseSource("ContactDataFromJsonFile")]
         public void ContactCreationTest(EntryDate entry)
         {
             List<EntryDate> oldContactsList = AppManager.Contact.GetContactList();
