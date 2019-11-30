@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using LinqToDB.Mapping;
 
 namespace WebAddessbookTests
 {
+    [Table(Name = "addressbook")]
     public class EntryDate : IEquatable<EntryDate>, IComparable<EntryDate>
     {
         private string allPhone;
@@ -15,20 +17,64 @@ namespace WebAddessbookTests
         private string allInfo;
 
         //Свойства
+
+        [Column(Name = "id")]
         public string Id { get; set; }
+
+        [Column(Name = "firstname")]
         public string FirstName { get; set; }
+
+        [Column(Name = "middlename")]
         public string MiddleName { get; set; }
+
+        [Column(Name = "lastname")]
         public string LastName { get; set; }
+
+        [Column(Name = "nickname")]
         public string NickName { get; set; }
+
+        [Column(Name = "title")]
+        public string Title { get; set; }
+
+        [Column(Name = "company")]
+        public string Company { get; set; }
+
+        [Column(Name = "address")]
         public string Address { get; set; }
+
+        [Column(Name = "mobile")]
         public string MobilePhone { get; set; }
+
+        [Column(Name = "home")]
         public string HomePhone { get; set; }
+
+        [Column(Name = "work")]
         public string WorkPhone { get; set; }
+
+        [Column(Name = "fax")]
+        public string Fax { get; set; }
+
+        [Column(Name = "phone2")]
         public string SecondaryHomePhone { get; set; }
+
+        [Column(Name = "email")]
         public string E_mail { get; set; }
+
+        [Column(Name = "email2")]
         public string E_mail2 { get; set; }
+
+        [Column(Name = "email3")]
         public string E_mail3 { get; set; }
-        
+
+        [Column(Name = "homepage")]
+        public string Homepage { get; set; }
+
+        [Column(Name = "address2")]
+        public string SecondaryAddress { get; set; }
+
+        [Column(Name = "notes")]
+        public string Notes { get; set; }
+
         public string AllPhone
         {
             get
@@ -79,7 +125,7 @@ namespace WebAddessbookTests
                 }
                 else
                 {
-                    return (FirstName + " " + MiddleName + " " + LastName).Trim();
+                    return (CheckOnNull("", FirstName) + CheckOnNull(" ", MiddleName) + CheckOnNull(" ", LastName)).Trim();
                 }
             }
             set
@@ -98,13 +144,25 @@ namespace WebAddessbookTests
                 }
                 else
                 {
-                    return (FirstName + " " + MiddleName + " " + LastName
-                        + "\r\n" 
-                        + Address
-                        + "\r\n\r\n"
-                        + "M: " + MobilePhone
-                        + "\r\n\r\n"
-                        + E_mail).Trim();
+                    return 
+                        (
+                        CheckOnNull("", FirstName) + CheckOnNull(" ", MiddleName) + CheckOnNull(" ", LastName)
+                        + CheckOnNull("\r\n", NickName)
+                        + CheckOnNull("\r\n", Title)
+                        + CheckOnNull("\r\n", Company)
+                        + CheckOnNull("\r\n", Address)
+                        + CheckOnNull("\r\n\r\nH: ", HomePhone)
+                        + CheckOnNull("\r\nM: ", MobilePhone)
+                        + CheckOnNull("\r\nW: ", WorkPhone)
+                        + CheckOnNull("\r\nF: ", Fax)
+                        + CheckOnNull("\r\n\r\n", E_mail)
+                        + CheckOnNull("\r\n", E_mail2)
+                        + CheckOnNull("\r\n", E_mail3)
+                        + CheckOnNull("\r\nHomepage:\r\n", Homepage)
+                        + CheckOnNull("\r\n\r\n\r\n", SecondaryAddress)
+                        + CheckOnNull("\r\n\r\nP: ", SecondaryHomePhone)
+                        + CheckOnNull("\r\n\r\n", Notes)
+                        ).Trim();
                 }
             }
             set
@@ -229,7 +287,11 @@ namespace WebAddessbookTests
             return result;
         }
 
-        
+        public string CheckOnNull(string addText, string text)
+        {
+            if (text != "") return addText + text;
+            else return "";
+        }
     }
 
 }

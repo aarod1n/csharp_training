@@ -3,15 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LinqToDB.Mapping;
+
 
 namespace WebAddessbookTests
 {
+    //Делаем привязку соответствия класса к таблице
+    [Table(Name = "group_list")]
     public class GroupData : IEquatable<GroupData>, IComparable<GroupData>
     {
         //Свойства класса
-        public string GroupName { get; set; }        
-        public string GroupHeader { get; set; }       
+        //Привязываем свойства к полям из таблици
+        //Если мы собираемся не только читать данные из полей, но и писать в них, нужно обратить внимание, некоторые поля имеют свойство Not Null
+        //В атрибуте можно указать NotNull
+        [Column(Name = "group_name"), NotNull]
+        public string GroupName { get; set; }
+        
+        [Column(Name = "group_header")]
+        public string GroupHeader { get; set; }
+        
+        [Column(Name = "group_header")]
         public string GroupFooter { get; set; }
+        
+        //Данное поле является уникальным ключем и идентификатором
+        [Column(Name = "group_id"), PrimaryKey, Identity]
         public string Id { get; set; }
 
 
@@ -68,6 +83,16 @@ namespace WebAddessbookTests
             if (Object.ReferenceEquals(other, null))
                 return 1;
             return GroupName.CompareTo(other.GroupName); //Сравнение по смыслу имен групп
+        }
+
+        public static List<GroupData> GetAll()
+        {   //Создаем подключение к БД db
+            //Возвращаем список
+            //Конструкция using используется для закрытия соединения с БД, db.Close() писать не нужно, выполнится автоматом.
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from g in db.Groups select g).ToList();
+            }
         }
     }
 }

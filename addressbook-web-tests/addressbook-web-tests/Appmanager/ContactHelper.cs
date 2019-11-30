@@ -167,24 +167,37 @@ namespace WebAddessbookTests
             string address = driver.FindElement(By.Name("address")).GetAttribute("value");
             string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
             string email = driver.FindElement(By.Name("email")).GetAttribute("value");
-
-            //string nickname = driver.FindElement(By.Name("nickname")).GetAttribute("value");
-            //string company = driver.FindElement(By.Name("company")).GetAttribute("value");
-            //string title = driver.FindElement(By.Name("title")).GetAttribute("value");
-            //string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");                        
-            //string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
-            //string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");
-            //string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
-            //string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
-            //string homepage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
-            //string secondaryHomePhone = driver.FindElement(By.Name("phone2")).GetAttribute("value");
+            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+            string nickname = driver.FindElement(By.Name("nickname")).GetAttribute("value");
+            string company = driver.FindElement(By.Name("company")).GetAttribute("value");
+            string title = driver.FindElement(By.Name("title")).GetAttribute("value");
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");            
+            string homepage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
+            string secondaryHomePhone = driver.FindElement(By.Name("phone2")).GetAttribute("value"); 
+            string notes = driver.FindElement(By.Name("notes")).GetAttribute("value");
+            string secondaryAddress = driver.FindElement(By.Name("address2")).GetAttribute("value");
 
             return new EntryDate(firstname, lastname)
             {
                 MiddleName = middlename,
                 Address = address,
                 MobilePhone = mobilePhone,
-                E_mail = email
+                HomePhone = homePhone,
+                WorkPhone = workPhone,
+                E_mail = email,
+                E_mail2 = email2,
+                E_mail3 = email3,
+                NickName = nickname,
+                Company = company,
+                Title = title,                
+                Fax = fax,
+                SecondaryAddress = secondaryAddress,
+                SecondaryHomePhone = secondaryHomePhone,
+                Homepage = homepage,
+                Notes = notes
             };
         }
 

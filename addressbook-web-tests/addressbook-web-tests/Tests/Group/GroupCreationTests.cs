@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -102,6 +103,20 @@ namespace WebAddessbookTests
             List<GroupData> newGroupList = AppManager.Group.GetGroupList();
             oldGroupList.Add(group);
             AppManager.Group.CheckGroupResultByObj(oldGroupList, newGroupList);
+        }
+
+        [Test]
+        public void TestDBConnectivity()
+        {
+            DateTime start = DateTime.Now;
+            List<GroupData> groupFromUI = AppManager.Group.GetGroupList();
+            DateTime end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
+
+            start = DateTime.Now;
+            List<GroupData> groupFromBD = GroupData.GetAll();
+            end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
         }
     }
 }

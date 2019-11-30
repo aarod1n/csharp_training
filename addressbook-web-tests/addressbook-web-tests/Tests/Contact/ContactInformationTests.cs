@@ -25,8 +25,8 @@ namespace WebAddessbookTests
         [Test]
         public void TestContactInformation_12task()
         {
-            EntryDate fromForm = AppManager.Contact.GetContactInformationFromEditForm(1);
-            EntryDate fromDetailForm = AppManager.Contact.GetContactInformationFromDetails(1);
+            EntryDate fromForm = AppManager.Contact.GetContactInformationFromEditForm(7);
+            EntryDate fromDetailForm = AppManager.Contact.GetContactInformationFromDetails(7);
 
             Assert.AreEqual(fromForm.FML, fromDetailForm.FML);
             Assert.AreEqual(fromForm.AllInfo, fromDetailForm.AllInfo);
