@@ -11,7 +11,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 namespace WebAddessbookTests
 {
     [TestFixture]
-    public class GroupCerationTests : AuhtTestsBase
+    public class GroupCerationTests : GroupTestBase
     {
         //Создаем список с объектами GroupData у которых случайным образом заполняются свойства.
         public static IEnumerable<GroupData> RandomGroupDataProvider()
@@ -94,13 +94,13 @@ namespace WebAddessbookTests
         [Test, TestCaseSource("GroupDataFromJsonFile")]
         public void GroupCreationTest(GroupData group)
         {
-            List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
+            List<GroupData> oldGroupList = GroupData.GetAll();
             AppManager.Group.Created(group);
 
             //Быстрая проверка
             Assert.AreEqual(oldGroupList.Count + 1, AppManager.Group.GetGroupCount());
 
-            List<GroupData> newGroupList = AppManager.Group.GetGroupList();
+            List<GroupData> newGroupList = GroupData.GetAll();
             oldGroupList.Add(group);
             AppManager.Group.CheckGroupResultByObj(oldGroupList, newGroupList);
         }
@@ -108,15 +108,21 @@ namespace WebAddessbookTests
         [Test]
         public void TestDBConnectivity()
         {
-            DateTime start = DateTime.Now;
-            List<GroupData> groupFromUI = AppManager.Group.GetGroupList();
-            DateTime end = DateTime.Now;
-            System.Console.Out.WriteLine(end.Subtract(start));
+            //DateTime start = DateTime.Now;
+            //List<GroupData> groupFromUI = AppManager.Group.GetGroupList();
+            //DateTime end = DateTime.Now;
+            //System.Console.Out.WriteLine(end.Subtract(start));
 
-            start = DateTime.Now;
-            List<GroupData> groupFromBD = GroupData.GetAll();
-            end = DateTime.Now;
-            System.Console.Out.WriteLine(end.Subtract(start));
+            //start = DateTime.Now;
+            //List<GroupData> groupFromBD = GroupData.GetAll();
+            //end = DateTime.Now;
+            //System.Console.Out.WriteLine(end.Subtract(start));
+
+
+            foreach (EntryDate contact in GroupData.GetAll()[0].GetContact())
+            {
+                System.Console.Out.WriteLine(contact);
+            }
         }
     }
 }

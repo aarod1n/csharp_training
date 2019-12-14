@@ -14,24 +14,24 @@ namespace WebAddessbookTests
     public class ContactCreationTests : AuhtTestsBase
     {
         //Создаем список с объектами EntryDate у которых случайным образом заполняются свойства.
-        public static IEnumerable<EntryDate> RandomContactDataProvider()
-        {
-            List<EntryDate> entry = new List<EntryDate>();
+        //public static IEnumerable<EntryDate> RandomContactDataProvider()
+        //{
+        //    List<EntryDate> entry = new List<EntryDate>();
 
-            for (int i = 0; i < 3; i++)
-            {
-                entry.Add(new EntryDate()
-                {
-                    FirstName = GenerationRandomString(10),
-                    MiddleName = GenerationRandomString(10),
-                    LastName = GenerationRandomString(10),
-                    Address = GenerationRandomString(10),
-                    MobilePhone = GenerationRandomString(10),
-                    E_mail = GenerationRandomString(10)
-                });
-            }
-            return entry;
-        }
+        //    for (int i = 0; i < 3; i++)
+        //    {
+        //        entry.Add(new EntryDate()
+        //        {
+        //            FirstName = GenerationRandomString(10),
+        //            MiddleName = GenerationRandomString(10),
+        //            LastName = GenerationRandomString(10),
+        //            Address = GenerationRandomString(10),
+        //            MobilePhone = GenerationRandomString(10),
+        //            E_mail = GenerationRandomString(10)
+        //        });
+        //    }
+        //    return entry;
+        //}
 
         //Читаем из xml файла
         public static IEnumerable<EntryDate> ContactDataFromXmlFile()
@@ -50,11 +50,11 @@ namespace WebAddessbookTests
         [Test, TestCaseSource("ContactDataFromJsonFile")]
         public void ContactCreationTest(EntryDate entry)
         {
-            List<EntryDate> oldContactsList = AppManager.Contact.GetContactList();
+            List<EntryDate> oldContactsList = EntryDate.GetAll();
             AppManager.Contact.Create(entry);
             Assert.AreEqual(oldContactsList.Count + 1, AppManager.Contact.GetContactCount());
             oldContactsList.Add(entry);
-            List<EntryDate> NewContactsList = AppManager.Contact.GetContactList();
+            List<EntryDate> NewContactsList = EntryDate.GetAll();
             AppManager.Contact.CheckContactResultByObj(oldContactsList, NewContactsList);
         }
     }

@@ -22,7 +22,7 @@ namespace WebAddessbookTests
         [Column(Name = "group_header")]
         public string GroupHeader { get; set; }
         
-        [Column(Name = "group_header")]
+        [Column(Name = "group_footer")]
         public string GroupFooter { get; set; }
         
         //Данное поле является уникальным ключем и идентификатором
@@ -72,7 +72,7 @@ namespace WebAddessbookTests
 
         public override string ToString()
         {
-            return "\nName=" + GroupName + "\nHeader= " + GroupHeader + "\nFooter= " + GroupFooter;
+            return "\nID=" + Id +"\nName=" + GroupName + "\nHeader= " + GroupHeader + "\nFooter= " + GroupFooter;
         }
 
         //Для сортировки списков, сравнение
@@ -92,6 +92,16 @@ namespace WebAddessbookTests
             using (AddressBookDB db = new AddressBookDB())
             {
                 return (from g in db.Groups select g).ToList();
+            }
+        }
+
+        public List<EntryDate> GetContact()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from c in db.Contacts
+                        from gcr in db.GCR.Where(p => p.GroupID == this.Id  && p.ContactID == c.Id)
+                        select c).Distinct().ToList();
             }
         }
     }

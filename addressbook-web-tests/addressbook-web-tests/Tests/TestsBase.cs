@@ -19,6 +19,7 @@ namespace WebAddessbookTests
     public class TestsBase
     {
         protected ApplicationManager AppManager;
+        public static bool PERFORM_LONG_UI_CHECKS = false;
 
         [SetUp]
         public void SetupApplicationManager()

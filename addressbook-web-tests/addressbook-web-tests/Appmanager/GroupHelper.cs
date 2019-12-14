@@ -38,11 +38,33 @@ namespace WebAddessbookTests
             return this;
         }
 
+        public GroupHelper Modify(GroupData oldData, GroupData newData)
+        {
+            manager.Navigator.OpenStartPage();
+            GoToGroupPage();
+            SelectGroup(oldData.Id);
+            EditGroup();
+            FillGroupForm(newData);
+            UpdateGroup();
+            GoToGroupPage();
+            return this;
+        }
+
         public GroupHelper RemovaGroup(int g)
         {
             manager.Navigator.OpenStartPage();
             GoToGroupPage();
             SelectGroup(g+1);
+            DeleteGroup();
+            GoToGroupPage();
+            return this;
+        }
+
+        public GroupHelper RemovaGroup(GroupData group)
+        {
+            manager.Navigator.OpenStartPage();
+            GoToGroupPage();
+            SelectGroup(group.Id);
             DeleteGroup();
             GoToGroupPage();
             return this;
@@ -123,9 +145,23 @@ namespace WebAddessbookTests
             Assert.AreEqual(oldGroupList, newGroupList);
         }
 
-        public void CheckChangeGroupResultByObj(int index, GroupData group, List<GroupData> oldGroupList, List<GroupData> newGroupList)
+        public void CheckChangeGroupResultByObj(int index, GroupData newGroup, List<GroupData> oldGroupList, List<GroupData> newGroupList)
         {
-            oldGroupList[index].GroupName = group.GroupName;
+            oldGroupList[index].GroupName = newGroup.GroupName;
+            oldGroupList.Sort();
+            newGroupList.Sort();
+            Assert.AreEqual(oldGroupList, newGroupList);
+        }
+
+        public void CheckChangeGroupResultByObj(GroupData newGroup, GroupData oldGroup, List<GroupData> oldGroupList, List<GroupData> newGroupList)
+        {
+            for(int i = 0; i < oldGroupList.Count; i++)
+            {
+                if(oldGroupList[i].Id == oldGroup.Id)
+                {
+                    oldGroupList[i] = newGroup;
+                }
+            }
             oldGroupList.Sort();
             newGroupList.Sort();
             Assert.AreEqual(oldGroupList, newGroupList);
@@ -169,6 +205,15 @@ namespace WebAddessbookTests
                     driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
                 }
 
+            }
+            return this;
+        }
+
+        public GroupHelper SelectGroup(string id)
+        {
+            if (IsElementPresent(By.CssSelector("input[name='selected[]']")))
+            {
+                driver.FindElement(By.XPath("(//input[@name='selected[]' and @value=" + id + "])")).Click();
             }
             return this;
         }

@@ -19,5 +19,7 @@ namespace WebAddessbookTests
 
         //Возвращаем таблицу данных EntryDate для построения списка соответствующего типа
         public ITable<EntryDate> Contacts { get { return GetTable<EntryDate>(); } }
+
+        public ITable<GroupContactRelation> GCR { get { return GetTable<GroupContactRelation>(); } }
     }
 }

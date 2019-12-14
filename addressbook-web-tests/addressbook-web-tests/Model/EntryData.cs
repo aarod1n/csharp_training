@@ -15,12 +15,13 @@ namespace WebAddessbookTests
         private string allEmail;
         private string fml;
         private string allInfo;
-
+        
         //Свойства
 
-        [Column(Name = "id")]
+        //ID помечен как 
+        [Column(Name = "id"), PrimaryKey]
         public string Id { get; set; }
-
+        
         [Column(Name = "firstname")]
         public string FirstName { get; set; }
 
@@ -188,12 +189,7 @@ namespace WebAddessbookTests
         {
             FirstName = first;
             LastName = last;
-            MiddleName = "";
-            Address = "";
-            MobilePhone = "";
-            HomePhone = "";
-            WorkPhone = "";
-            E_mail = "";
+            
         }
 
         public EntryDate(string first, string last, string address)
@@ -201,11 +197,6 @@ namespace WebAddessbookTests
             FirstName = first;
             LastName = last;
             Address = address;
-            MiddleName = "";
-            MobilePhone = "";
-            HomePhone = "";
-            WorkPhone = "";
-            E_mail = "";
         }
 
         //Учим сравнивать объекты типа EntryDate
@@ -232,12 +223,11 @@ namespace WebAddessbookTests
 
         public override string ToString()
         {
-            return "\nname= " + FirstName + "\nmiddleName= " + MiddleName + "\nlastName= " + LastName + "\ne-mail= " + E_mail;
+            return "\nID= " + Id + "\nname= " + FirstName + "\nmiddleName= " + MiddleName + "\nlastName= " + LastName;
         }
 
         //Для сортировки списков, сравнение
         //Вернет 1 если текущий объект больше, вернет 0 если равны, вернет -1 если текущий меньше
-        //
         public int CompareTo(EntryDate other)
         {
             if (Object.ReferenceEquals(other, null))
@@ -248,6 +238,14 @@ namespace WebAddessbookTests
             }
             else return LastName.CompareTo(other.LastName);
         }
+
+
+        //public int CompareTo(EntryDate other)
+        //{
+        //    if (Object.ReferenceEquals(other, null))
+        //        return 1;
+        //    return Id.CompareTo(other.Id);
+        //}
 
         //Вариант option = 1 для склейки телефонов 
         //Берем строку, заменяем "-()" на "", добавляем в конец "\r\n", возвращаем.
@@ -291,6 +289,16 @@ namespace WebAddessbookTests
         {
             if (text != "") return addText + text;
             else return "";
+        }
+
+        public static List<EntryDate> GetAll()
+        {   //Создаем подключение к БД db
+            //Возвращаем список
+            //Конструкция using используется для закрытия соединения с БД, db.Close() писать не нужно, выполнится автоматом.
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from g in db.Contacts select g).ToList();
+            }
         }
     }
 

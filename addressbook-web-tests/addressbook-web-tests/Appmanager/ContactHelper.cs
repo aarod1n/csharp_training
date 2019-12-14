@@ -50,6 +50,17 @@ namespace WebAddessbookTests
             return this;
         }
 
+        public ContactHelper Removal(EntryDate oldContactForRemuval)
+        {
+            manager.Navigator.OpenStartPage();
+            manager.Navigator.GoToHome();
+            SelectContact(oldContactForRemuval.Id);
+            DeleteContact();
+            ClosedAlert();
+            manager.Navigator.GoToHome();
+            return this;
+        }
+
         public ContactHelper Edit(int index, EntryDate entry)
         {
             manager.Navigator.OpenStartPage();
@@ -61,11 +72,32 @@ namespace WebAddessbookTests
             return this;
         }
 
+        public ContactHelper Edit(string id, EntryDate changeEntry)
+        {
+            manager.Navigator.OpenStartPage();
+            manager.Navigator.GoToHome();
+            SelectContactChange(id);
+            FillEntryForm(changeEntry);
+            SubmitUpdateEntry();
+            manager.Navigator.GoToHome();
+            return this;
+        }
+
         public ContactHelper Delete(int index)
         {
             manager.Navigator.OpenStartPage();
             manager.Navigator.GoToHome();
             SelectContactChange(index);
+            SubmitDeleteEntry();
+            manager.Navigator.GoToHome();
+            return this;
+        }
+
+        public ContactHelper Delete(EntryDate removalContact)
+        {
+            manager.Navigator.OpenStartPage();
+            manager.Navigator.GoToHome();
+            SelectContactChange(removalContact.Id);
             SubmitDeleteEntry();
             manager.Navigator.GoToHome();
             return this;
@@ -134,6 +166,25 @@ namespace WebAddessbookTests
             oldContactsList.Sort();
             newContactsList.Sort();
             Assert.AreEqual(oldContactsList, newContactsList);
+        }
+
+        public void CheckContactChangeResultByObj(EntryDate oldContact, EntryDate changeEntry, List<EntryDate> oldContactList, List<EntryDate> newContactList)
+        {
+            for(int i = 0; i < oldContactList.Count; i++)
+            {
+                if(oldContactList[i].Id == oldContact.Id)
+                {
+                    oldContactList[i].FirstName = changeEntry.FirstName;
+                    oldContactList[i].MiddleName = changeEntry.MiddleName;
+                    oldContactList[i].LastName = changeEntry.LastName;
+                    oldContactList[i].Address = changeEntry.Address;
+                    oldContactList[i].MobilePhone = changeEntry.MobilePhone;
+                    oldContactList[i].E_mail = changeEntry.E_mail;
+                }
+            }
+            oldContactList.Sort();
+            newContactList.Sort();
+            Assert.AreEqual(oldContactList, newContactList);
         }
 
         //Получаем элементы из таблицы, парсим по нужным полям.
@@ -227,11 +278,24 @@ namespace WebAddessbookTests
         public ContactHelper FillEntryForm(EntryDate entry)
         {
             Type(By.Name("firstname"), entry.FirstName);
+            Type(By.Name("middlename"), entry.MiddleName);
             Type(By.Name("lastname"), entry.LastName);
             Type(By.Name("address"), entry.Address);
-            Type(By.Name("middlename"), entry.MiddleName);
             Type(By.Name("mobile"), entry.MobilePhone);
             Type(By.Name("email"), entry.E_mail);
+            Type(By.Name("email2"), entry.E_mail2);
+            Type(By.Name("email3"), entry.E_mail3);
+            Type(By.Name("nickname"), entry.NickName);
+            Type(By.Name("company"), entry.Company);
+            Type(By.Name("title"), entry.Title);
+            Type(By.Name("home"), entry.HomePhone);
+            Type(By.Name("work"), entry.WorkPhone);
+            Type(By.Name("fax"), entry.Fax);
+            Type(By.Name("homepage"), entry.Homepage);
+            Type(By.Name("phone2"), entry.SecondaryHomePhone);
+            Type(By.Name("address2"), entry.SecondaryAddress);
+            Type(By.Name("notes"), entry.Notes);
+
 
             //Чекнем, есть ли данный выпадающий список на странице. Так как форма создания и форма редактирования разные.
             if (IsElementPresent(By.Name("new_group")))
@@ -277,6 +341,13 @@ namespace WebAddessbookTests
             return this;
         }
 
+        public ContactHelper SelectContact(string id)
+        {
+            //Пример запроса: //input[@name='selected[]' and @value='229']
+            driver.FindElement(By.XPath("(//input[@name='selected[]' and @value=" + id + "])")).Click();
+            return this;
+        }
+
         public ContactHelper DeleteContact()
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
@@ -291,19 +362,19 @@ namespace WebAddessbookTests
             return this;
         }
 
-        //Для отображения контактов в конкретной группе(тестовый способ, можно настроить)
-        public ContactHelper SelectGroupView()
-        {
-            List<IWebElement> options = driver.FindElement(By.Name("group")).FindElements(By.TagName("option")).ToList();
-            for (int i = 0; i < options.Count; i++)
-            {
-                string element;
-                element = options[i].GetAttribute("value");
-                if (!element.Equals("[none]") & !element.Equals("test2name"))
-                    options[i].Click();
-            }
-            return this; 
-        }
+        ////Для отображения контактов в конкретной группе(тестовый способ, можно настроить)
+        //public ContactHelper SelectGroupView()
+        //{
+        //    List<IWebElement> options = driver.FindElement(By.Name("group")).FindElements(By.TagName("option")).ToList();
+        //    for (int i = 0; i < options.Count; i++)
+        //    {
+        //        string element;
+        //        element = options[i].GetAttribute("value");
+        //        if (!element.Equals("[none]") & !element.Equals("test2name"))
+        //            options[i].Click();
+        //    }
+        //    return this; 
+        //}
 
         //Оказалось из строчки <option value="38">test2name</option> в переменную element пишем "38", что является id test2name.
         //Как передать значение "test2name" и сравнивать с ним, пока не разобрался.
@@ -341,6 +412,26 @@ namespace WebAddessbookTests
             return this;
         }
 
+        //Ищем строку из таблицы у которой id первого поля равно "string id", кликаем по ссылки из этой строки.
+        public ContactHelper SelectContactChange(string id)
+        {
+            if (IsElementPresent(By.CssSelector("tr[name=entry]")))
+            {
+                
+                driver.FindElement(By.CssSelector("a[href='edit.php?id=" + id)).Click();
+                
+                //Неебический костыль
+                //IList<IWebElement> row = driver.FindElements(By.CssSelector("tr[name=entry]"));
+                //foreach(IWebElement r in row)
+                //{
+                //    IList<IWebElement> cell = r.FindElements(By.TagName("td"));
+                //    if (cell[0].FindElement(By.TagName("input")).GetAttribute("id") == id)
+                //        
+                //}
+            }
+            return this;
+        }
+
         public ContactHelper SelectContactDetails(int index)
         {
             if (IsElementPresent(By.CssSelector("a[href^='view.php?id']")))
@@ -352,8 +443,5 @@ namespace WebAddessbookTests
             }
             return this;
         }
-
-        
-
     }
 }

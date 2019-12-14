@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace WebAddessbookTests
 {
     [TestFixture]
-    public class GroupRemovalTests : AuhtTestsBase
+    public class GroupRemovalTests : GroupTestBase
     {
 
         [Test]
@@ -17,18 +17,17 @@ namespace WebAddessbookTests
             group.GroupFooter = "test123Removoalfooter";
 
             AppManager.Group.CheckPresenceGroup(group);
-            
-            List<GroupData> oldGroupList = AppManager.Group.GetGroupList();
-
-            //Созраняем ту группу что будем удалять
+            List<GroupData> oldGroupList = GroupData.GetAll();
+                        
+            //Сохраняем ту группу что будем удалять
             GroupData removalGroup = oldGroupList[0];
 
-            AppManager.Group.RemovaGroup(0);
-
+            AppManager.Group.RemovaGroup(removalGroup);
+            
             //Быстрая проверка
             Assert.AreEqual(oldGroupList.Count - 1, AppManager.Group.GetGroupCount());
 
-            List<GroupData> newGroupList = AppManager.Group.GetGroupList();
+            List<GroupData> newGroupList = GroupData.GetAll();
 
             oldGroupList.RemoveAt(0);
             AppManager.Group.CheckGroupResultByObj(oldGroupList, newGroupList);
