@@ -19,7 +19,7 @@ namespace WebAddessbookTests
         //Свойства
 
         //ID помечен как 
-        [Column(Name = "id"), PrimaryKey]
+        [Column(Name = "id"), PrimaryKey, Identity]
         public string Id { get; set; }
         
         [Column(Name = "firstname")]
@@ -300,6 +300,18 @@ namespace WebAddessbookTests
                 return (from g in db.Contacts select g).ToList();
             }
         }
+
+        public List<GroupData> GetGroup()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from g in db.Groups
+                        from gcr in db.GCR.Where(p => p.ContactID == this.Id && p.GroupID == g.Id)
+                        select g).ToList();
+            }
+        }
+
+
     }
 
 }

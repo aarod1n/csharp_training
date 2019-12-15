@@ -15,5 +15,13 @@ namespace WebAddessbookTests
         
         [Column(Name = "id")]
         public string ContactID { get; set; }
+
+        public static List<GroupContactRelation> GetAll()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from g in db.GCR select g).ToList();
+            }                
+        }
     }
 }

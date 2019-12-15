@@ -102,9 +102,11 @@
     <Compile Include="Model\GroupData.cs" />
     <Compile Include="Appmanager\GroupHelper.cs" />
     <Compile Include="Tests\AuhtTestsBase.cs" />
+    <Compile Include="Tests\Contact\ContactAddGroupTests.cs" />
     <Compile Include="Tests\Contact\ContactInformationTests.cs" />
     <Compile Include="Tests\Contact\ContactChangesTests.cs" />
     <Compile Include="Tests\Contact\ContactRemovalTests.cs" />
+    <Compile Include="Tests\Contact\ContactRemoveGroupTests.cs" />
     <Compile Include="Tests\GroupTestBase.cs" />
     <Compile Include="Tests\Group\GroupChangeTests.cs" />
     <Compile Include="Tests\Group\GroupRemovalTests.cs" />

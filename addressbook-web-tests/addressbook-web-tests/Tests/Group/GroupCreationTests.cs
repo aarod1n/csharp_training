@@ -119,9 +119,9 @@ namespace WebAddessbookTests
             //System.Console.Out.WriteLine(end.Subtract(start));
 
 
-            foreach (EntryDate contact in GroupData.GetAll()[0].GetContact())
+            foreach (GroupData group in EntryDate.GetAll()[0].GetGroup())
             {
-                System.Console.Out.WriteLine(contact);
+                System.Console.Out.WriteLine(group);
             }
         }
     }

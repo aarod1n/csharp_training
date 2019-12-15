@@ -4,7 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using System.Text.RegularExpressions;
-
+using OpenQA.Selenium.Support.UI;
 
 namespace WebAddessbookTests
 {
@@ -24,17 +24,6 @@ namespace WebAddessbookTests
             GoToAddNewEntry();
             FillEntryForm(entry);
             SubmitNewEntry();
-            manager.Navigator.GoToHome();
-            return this;
-        }
-
-        public ContactHelper ChangeGroup(int index)
-        {
-            manager.Navigator.OpenStartPage();
-            manager.Navigator.GoToHome();
-            SelectContact(index);
-            SelectGroupAddTo();
-            AddToGroupClick();
             manager.Navigator.GoToHome();
             return this;
         }
@@ -99,6 +88,33 @@ namespace WebAddessbookTests
             manager.Navigator.GoToHome();
             SelectContactChange(removalContact.Id);
             SubmitDeleteEntry();
+            manager.Navigator.GoToHome();
+            return this;
+        }
+
+        public ContactHelper AddInGroup(EntryDate contact, GroupData group)
+        {
+            manager.Navigator.OpenStartPage();
+            manager.Navigator.GoToHome();
+            ClearGroupFilter();
+            SelectContact(contact.Id);
+            SelectGroupToAdd(group.GroupName);
+            AddToGroupClick();
+
+            //Ожидаем появления на страницы элемента By.CssSelector("#content > div"), хотя бы одного 
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("#content > div")).Count > 0);
+
+            return this;
+        }
+
+        public ContactHelper RemovFromGroup(EntryDate contact, GroupData group)
+        {
+            manager.Navigator.OpenStartPage();
+            manager.Navigator.GoToHome();
+            SelectGroupView(group.GroupName);
+            SelectContact(contact.Id);
+            RemoveToGroupClick();
             manager.Navigator.GoToHome();
             return this;
         }
@@ -170,9 +186,9 @@ namespace WebAddessbookTests
 
         public void CheckContactChangeResultByObj(EntryDate oldContact, EntryDate changeEntry, List<EntryDate> oldContactList, List<EntryDate> newContactList)
         {
-            for(int i = 0; i < oldContactList.Count; i++)
+            for (int i = 0; i < oldContactList.Count; i++)
             {
-                if(oldContactList[i].Id == oldContact.Id)
+                if (oldContactList[i].Id == oldContact.Id)
                 {
                     oldContactList[i].FirstName = changeEntry.FirstName;
                     oldContactList[i].MiddleName = changeEntry.MiddleName;
@@ -225,9 +241,9 @@ namespace WebAddessbookTests
             string title = driver.FindElement(By.Name("title")).GetAttribute("value");
             string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
             string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
-            string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");            
+            string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");
             string homepage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
-            string secondaryHomePhone = driver.FindElement(By.Name("phone2")).GetAttribute("value"); 
+            string secondaryHomePhone = driver.FindElement(By.Name("phone2")).GetAttribute("value");
             string notes = driver.FindElement(By.Name("notes")).GetAttribute("value");
             string secondaryAddress = driver.FindElement(By.Name("address2")).GetAttribute("value");
 
@@ -243,7 +259,7 @@ namespace WebAddessbookTests
                 E_mail3 = email3,
                 NickName = nickname,
                 Company = company,
-                Title = title,                
+                Title = title,
                 Fax = fax,
                 SecondaryAddress = secondaryAddress,
                 SecondaryHomePhone = secondaryHomePhone,
@@ -269,10 +285,10 @@ namespace WebAddessbookTests
 
         //1 lvl         
         ///////////////////////////////////////////////////////////////////////////
-        public ContactHelper GoToAddNewEntry() 
-        { 
-            driver.FindElement(By.LinkText("add new")).Click(); 
-            return this; 
+        public ContactHelper GoToAddNewEntry()
+        {
+            driver.FindElement(By.LinkText("add new")).Click();
+            return this;
         }
 
         public ContactHelper FillEntryForm(EntryDate entry)
@@ -311,7 +327,7 @@ namespace WebAddessbookTests
                     else options[0].Click();
                 }
             }
-                return this;
+            return this;
         }
 
         public ContactHelper SubmitNewEntry()
@@ -376,20 +392,16 @@ namespace WebAddessbookTests
         //    return this; 
         //}
 
-        //Оказалось из строчки <option value="38">test2name</option> в переменную element пишем "38", что является id test2name.
-        //Как передать значение "test2name" и сравнивать с ним, пока не разобрался.
-        //В варианте для создания контакта строчка "<option value="[none]">[none]</option>" удачно совпала.
-        public ContactHelper SelectGroupAddTo()
+        public void ClearGroupFilter()
         {
-            List<IWebElement> options = driver.FindElement(By.Name("to_group")).FindElements(By.TagName("option")).ToList();
-            for (int i = 0; i < options.Count; i++)
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
+        }
+
+        public ContactHelper SelectGroupToAdd(string name)
+        {
+            if (IsElementPresent(By.Name("to_group")))
             {
-                string element;
-                element = options[i].GetAttribute("value");
-                if(!element.Equals("38")) 
-                {
-                    options[i].Click();
-                }                    
+                new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(name);
             }
             return this;
         }
@@ -397,6 +409,12 @@ namespace WebAddessbookTests
         public ContactHelper AddToGroupClick()
         {
             driver.FindElement(By.Name("add")).Click();
+            return this;
+        }
+
+        public ContactHelper RemoveToGroupClick()
+        {
+            driver.FindElement(By.CssSelector("[name=remove]")).Click();
             return this;
         }
 
@@ -417,9 +435,9 @@ namespace WebAddessbookTests
         {
             if (IsElementPresent(By.CssSelector("tr[name=entry]")))
             {
-                
+
                 driver.FindElement(By.CssSelector("a[href='edit.php?id=" + id)).Click();
-                
+
                 //Неебический костыль
                 //IList<IWebElement> row = driver.FindElements(By.CssSelector("tr[name=entry]"));
                 //foreach(IWebElement r in row)
@@ -442,6 +460,11 @@ namespace WebAddessbookTests
                     elements[index - 1].Click();
             }
             return this;
+        }
+
+        public void SelectGroupView(string name)
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(name);
         }
     }
 }
